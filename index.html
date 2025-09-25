@@ -266,9 +266,9 @@ const STATE = {
 const thMonths = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
 function toBuddhistYearStr(d){
   const y = d.getFullYear()+543, m = thMonths[d.getMonth()], day = d.getDate();
-  return ${day} ${m} ${y};
+  return `${day} ${m} ${y}`;
 }
-function yymmLabel(d){ return ${thMonths[d.getMonth()]} ${d.getFullYear()+543}; }
+function yymmLabel(d){ return `${thMonths[d.getMonth()]} ${d.getFullYear()+543}`; }
 function isSameDate(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
 
 // รองรับ: YYYY-MM-DD, DD/MM/YYYY (พ.ศ./ค.ศ.), Excel serial, Date
@@ -340,7 +340,7 @@ function loadCache(){ try{ return JSON.parse(localStorage.getItem(CACHE_KEY)||'[
 /* ================= RENDER ================= */
 function renderHeader(){ $('#currentMonthLabel').text(yymmLabel(STATE.cursor)); }
 
-function blankCell(){ return <div class="day" style="opacity:.35"></div>; }
+function blankCell(){ return `<div class="day" style="opacity:.35"></div>`; }
 
 function eventsOnDate(d){
   const y=d.getFullYear(), m=d.getMonth(), day=d.getDate();
@@ -371,14 +371,14 @@ function eventTouchesYM(e,y,m){
 }
 
 function timeLabel(e){
-  if(e.startTime && e.endTime) return ${e.startTime}-${e.endTime};
+  if(e.startTime && e.endTime) return `${e.startTime}-${e.endTime}`;
   if(e.startTime) return e.startTime;
   return 'ทั้งวัน';
 }
 function rangeLabel(e){
   const d=parseAnyDate(e.date), s=parseAnyDate(e.startDate), en=parseAnyDate(e.endDate);
   if(d) return toBuddhistYearStr(d);
-  if(s && en) return ${toBuddhistYearStr(s)} – ${toBuddhistYearStr(en)};
+  if(s && en) return `${toBuddhistYearStr(s)} – ${toBuddhistYearStr(en)}`;
   if(s) return toBuddhistYearStr(s);
   return '';
 }
@@ -386,12 +386,12 @@ function escapeHtml(t){ return (t??'').toString().replace(/[&<>"]/g,s=>({'&':'&a
 
 function dayCell(d){
   const isSun = d.getDay()===0, isSat = d.getDay()===6;
-  const cellCls = day ${isSun?'sun':''} ${isSat?'sat':''};
+  const cellCls = `day ${isSun?'sun':''} ${isSat?'sat':''}`;
   const evs = eventsOnDate(d);
   const chips = evs.map(e=>`<div class="chip" title="${escapeHtml(e.title)}">
       <b>${escapeHtml(e.title)}</b> <span class="opacity-70">• ${timeLabel(e)}</span>
     </div>`).join('');
-  const todayBadge = isSameDate(d, STATE.today) ? <span class="today-badge">วันนี้</span> : '';
+  const todayBadge = isSameDate(d, STATE.today) ? <span class="today-badge">วันนี้</span>` : '';
   return `<div class="${cellCls}" data-date="${d.toISOString().slice(0,10)}" onclick="openDayModal('${d.toISOString()}')">
     ${todayBadge}
     <div class="num">${d.getDate()}</div>
@@ -421,7 +421,8 @@ function renderMonthGrid(){
 
   $('#monthGrid').html(frag.join(''));
   const monthEvents = eventsInMonth(y,m);
-  $('#monthList').html(monthEvents.map(e=>listItem(e)).join('') || <div class="text-slate-500">ไม่พบรายการในเดือนนี้</div>);
+  $('#monthList').html(monthEvents.map(e=>listItem(e)).join('') 
+    `<div class="text-slate-500">ไม่พบรายการในเดือนนี้</div>`);
 }
 
 function renderListView(){
@@ -442,7 +443,8 @@ function applyListFilter(){
   if(q) data = data.filter(e=>[e.title,e.details,e.location,e.owner].join(' ').toLowerCase().includes(q));
   if(y) data = data.filter(e=>eventTouchesYear(e, +y-543));
   if(m!=='') data = data.filter(e=>eventTouchesMonth(e, +m));
-  $('#listContainer').html(data.map(listItem).join('') || <div class="text-slate-500">ไม่พบรายการ</div>);
+  $('#listContainer').html(data.map(listItem).join('') 
+    `<div class="text-slate-500">ไม่พบรายการ</div>`);
 }
 
 function renderYearView(){
@@ -451,14 +453,14 @@ function renderYearView(){
   for(let m=0;m<12;m++){
     const label = ${thMonths[m]} ${year+543};
     const first=new Date(year,m,1), last=new Date(year,m+1,0), startDow=first.getDay();
-    const head = <div class="font-semibold mb-2 text-slate-700">${label}</div>;
-    const gridHead = <div class="mini-7 mb-1 text-center text-xs text-slate-500"><div>อา</div><div>จ</div><div>อ</div><div>พ</div><div>พฤ</div><div>ศ</div><div>ส</div></div>;
+    const head = `<div class="font-semibold mb-2 text-slate-700">${label}</div>`;
+    const gridHead = `<div class="mini-7 mb-1 text-center text-xs text-slate-500"><div>อา</div><div>จ</div><div>อ</div><div>พ</div><div>พฤ</div><div>ศ</div><div>ส</div></div>`;
     let cells = [];
     for(let i=0;i<startDow;i++) cells.push(<div class="card p-1 text-center text-xs opacity-30"></div>);
     for(let d=1; d<=last.getDate(); d++){
       const dd=new Date(year,m,d);
       const has = eventsOnDate(dd).length>0;
-      cells.push(<div class="card p-1 text-center text-xs ${has?'bg-sky-50':''}">${d}</div>);
+      cells.push(`<div class="card p-1 text-center text-xs ${has?'bg-sky-50':''}">${d}</div>`);
     }
     box.push(<div class="card p-3">${head}${gridHead}<div class="mini-7">${cells.join('')}</div></div>);
   }
@@ -477,8 +479,8 @@ function eventTouchesMonth(e,monthIdx){
 /* ================= MODALS ================= */
 function openDayModal(iso){
   const d = new Date(iso);
-  $('#modalDayTitle').text(เหตุการณ์ของวันที่ ${toBuddhistYearStr(d)});
-  $('#modalDaySub').text(วัน${['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'][d.getDay()]});
+  $('#modalDayTitle').text(`เหตุการณ์ของวันที่ ${toBuddhistYearStr(d)}`);
+  $('#modalDaySub').text(`วัน${['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'][d.getDay()]}`);
   const evs = eventsOnDate(d);
   $('#modalDayList').html(
     evs.map(e=>`
@@ -531,9 +533,10 @@ function openAdmin(tab='add', id=null){
 function closeAdminModal(){ $('#modal-admin').removeClass('show'); }
 
 function switchTab(name){
-  $('.tab').removeClass('active'); $(.tab[data-tab="${name}"]).addClass('active');
+   $('.tab').removeClass('active');
+  $(`.tab[data-tab="${name}"]`).addClass('active');
   $('#tab-add,#tab-edit,#tab-delete').addClass('hidden');
-  $(#tab-${name}).removeClass('hidden');
+  $(`#tab-${name}`).removeClass('hidden');
   if(name==='edit' || name==='delete') refreshAdminLists();
 }
 
@@ -571,7 +574,7 @@ function refreshAdminLists(cb){
 function dateForInput(v){
   const d = parseAnyDate(v); if(!d) return '';
   const m=('0'+(d.getMonth()+1)).slice(-2), dd=('0'+d.getDate()).slice(-2);
-  return ${d.getFullYear()}-${m}-${dd};
+  return `${d.getFullYear()}-${m}-${dd}`;
 }
 
 $('#btnAddConfirm').on('click', async ()=>{
@@ -593,7 +596,7 @@ $('#btnDeleteConfirm').on('click', async ()=>{
 });
 
 function collectForm(prefix, mode){
-  const v = (id)=>$(#${prefix}-${id}).val();
+  const v = (id)=>$(`#${prefix}-${id}`).val();
   const payload = {
     id:'', title:v('title'), emoji:v('emoji'),
     startTime:v('startTime'), endTime:v('endTime'),
@@ -653,6 +656,9 @@ function renderAll(){
   renderHeader();
   renderMonthGrid();
   renderListView();
+  $('#filterYear').html(`<option value="">ทั้งหมด</option>` + years.map(y=>`<option>${y}</option>`).join(''));
+  $('#filterMonth').html(`<option value="">ทุกเดือน</option>` + thMonths.map((m,i)=>`<option value="${i}">${m}</option>`).join(''));
+}
   renderYearView();
   $('#countAll').text(STATE.events.length);
   const cm=STATE.cursor.getMonth(), cy=STATE.cursor.getFullYear();
@@ -674,7 +680,7 @@ $('#searchInput,#filterMonth,#filterYear').on('input change', applyListFilter);
 
 // static dropdowns
 function fillStaticOptions(){
-  $('#add-emoji,#edit-emoji').html(<option value="">(ไม่มี)</option>`+EMOJI_CHOICES.map(e=>`<option>${e}</option>).join(''));
+  $('#add-emoji,#edit-emoji').html(`<option value="">(ไม่มี)</option>` + EMOJI_CHOICES.map(e=>`<option>${e}</option>`).join(''));
   $('#add-location,#edit-location').html(LOCATIONS.map(s=>`<option>${s}</option>`).join(''));
   $('#add-owner,#edit-owner').html(OWNERS.map(s=>`<option>${s}</option>`).join(''));
 }
