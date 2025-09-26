@@ -393,7 +393,8 @@ function dayCell(d){
   const cellCls = `day ${isSun?'sun':''} ${isSat?'sat':''}`;
   const evs = eventsOnDate(d);
   const chips = evs.map(e=>`<div class="chip" title="${escapeHtml(e.title)}">
-      <b>${escapeHtml(e.title)}</b> <span class="opacity-70">• ${timeLabel(e)}</span>
+      <b>${escapeHtml(e.title)}</b><br>
+      <span class="opacity-70">• ${timeLabel(e)}</span>
     </div>`).join('');
   const todayBadge = isSameDate(d, STATE.today) ? `<span class="today-badge">วันนี้</span>` : '';
   return `<div class="${cellCls}" data-date="${d.toISOString().slice(0,10)}" onclick="openDayModal('${d.toISOString()}')">
