@@ -106,6 +106,25 @@
 @media (min-width: 481px){
   .chip{ display:flex }
 }
+/* --- Mobile-first calendar tweaks --- */
+@media (max-width: 640px){
+  .card{ border-radius:16px; box-shadow:0 6px 18px rgba(15,23,42,.06) }
+  .day{ min-height:84px; padding:.5rem; border-radius:14px }
+  .day .num{ font-size:.95rem; right:.45rem; top:.45rem }
+  .chip{ font-size:.72rem; padding:.14rem .4rem; border-radius:10px }
+  /* ซ่อน “ไม่มีรายการ” ให้เป็นจุดเล็กแทน (ไม่รกตา) */
+  .day .no-items{ display:none }
+  .day.no-event::after{
+    content:'•'; position:absolute; left:.5rem; bottom:.45rem; opacity:.25; font-size:1rem;
+  }
+  /* แถบควบคุมแน่นขึ้น */
+  #currentMonthLabel{ min-width:auto; padding:.4rem .8rem }
+  .btn{ padding:.4rem .7rem; border-radius:12px }
+}
+
+/* ปรับสีวันมีงานให้ตัดชัดเจนขึ้น (เดือน/ปี) */
+.day.has-event{ background:#e0f2fe }            /* น้ำเงินอ่อน */
+#yearGrid .card .has-event{ background:#dbeafe } /* สำหรับวิวรายปี */
 </style>
 </head>
 <body class="bg-grad text-slate-800">
