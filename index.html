@@ -499,15 +499,16 @@ function dayCell(d){
   const todayBadge = isSameDate(d, STATE.today) ? `<span class="today-badge">วันนี้</span>` : '';
 
   return `
-  <div class="${cellCls}" data-date="${d.toISOString().slice(0,10)}" onclick="openDayModal('${d.toISOString()}')">
+  <div class="${cellCls} day-cell" data-iso="${d.toISOString()}">
     ${todayBadge}
     <div class="num">${d.getDate()}</div>
     <div class="mt-6">
-      ${chipsDesktop || ''}     <!-- มือถือซ่อนด้วย CSS แล้ว -->
-      ${dotsMobile}
-      ${(!has && window.innerWidth>480) ? `<div class="text-xs text-slate-400">ไม่มีรายการ</div>` : ``}
+      ${chipsDesktop || ''}   <!-- เดสก์ท็อป -->
+      ${dotsMobile}           <!-- มือถือ -->
+      ${(!has && window.innerWidth > 480) ? '<div class="text-xs text-slate-400">ไม่มีรายการ</div>' : ''}
     </div>
-  </div>`;
+  </div>
+  `;
 }
 
 function listItem(e){
