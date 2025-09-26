@@ -458,17 +458,36 @@ function escapeHtml(t){ return (t??'').toString().replace(/[&<>"]/g,s=>({'&':'&a
 
 function dayCell(d){
   const isSun = d.getDay()===0, isSat = d.getDay()===6;
-  const cellCls = `day ${isSun?'sun':''} ${isSat?'sat':''}`;
   const evs = eventsOnDate(d);
-  const chips = evs.map(e=>`<div class="chip" title="${escapeHtml(e.title)}">
-      <b>${escapeHtml(e.title)}</b><br>
+  const has = evs.length > 0;
+  const cellCls = `day ${isSun?'sun':''} ${isSat?'sat':''} ${has?'has-event':''}`;
+
+  // เดสก์ท็อป: แสดงเป็นชิปข้อความ
+  const chipsDesktop = evs.map(e=>`
+    <div class="chip" title="${escapeHtml(e.title)}">
+      <span>${e.emoji || '🗓️'}</span>
+      <span>${escapeHtml(e.title)}</span>
       <span class="opacity-70">• ${timeLabel(e)}</span>
     </div>`).join('');
+
+  // มือถือ: แสดง “จุด + จำนวนงาน”
+  const dotsMobile = has
+    ? `<div class="mobile-dots" aria-label="มี ${evs.length} รายการ">
+         <span class="dot"></span><span class="count-badge">${evs.length}</span>
+       </div>`
+    : '';
+
   const todayBadge = isSameDate(d, STATE.today) ? `<span class="today-badge">วันนี้</span>` : '';
-  return `<div class="${cellCls}" data-date="${d.toISOString().slice(0,10)}" onclick="openDayModal('${d.toISOString()}')">
+
+  return `
+  <div class="${cellCls}" data-date="${d.toISOString().slice(0,10)}" onclick="openDayModal('${d.toISOString()}')">
     ${todayBadge}
     <div class="num">${d.getDate()}</div>
-    <div class="mt-6">${chips || `<div class="text-xs text-slate-400">ไม่มีรายการ</div>`}</div>
+    <div class="mt-6">
+      ${chipsDesktop || ''}     <!-- มือถือซ่อนด้วย CSS แล้ว -->
+      ${dotsMobile}
+      ${(!has && window.innerWidth>480) ? `<div class="text-xs text-slate-400">ไม่มีรายการ</div>` : ``}
+    </div>
   </div>`;
 }
 
