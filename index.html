@@ -386,7 +386,7 @@ async function fetchFromGAS(){
   return null;
 }
 async function postToGAS(mode, payload){
-  const res = await fetch(GAS_ENDPOINT, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({mode, payload})});
+  const res = await fetch(GAS_ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain; charset=utf-8' }, body:JSON.stringify({mode, payload})});
   return res.json();
 }
 
