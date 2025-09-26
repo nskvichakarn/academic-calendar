@@ -65,6 +65,47 @@
   background: rgba(255,255,255,0.25);
   color: #fff;
 }
+/* ===== มือถือ: ทำให้กระชับ อ่านง่าย ===== */
+@media (max-width: 480px){
+  .grid-7{ gap:.35rem; }
+  .day{
+    min-height:84px;            /* ย่อความสูง */
+    padding:.5rem .55rem;
+    border-radius:16px;
+  }
+  .day .num{                    /* ตัวเลขวันใหญ่ขึ้นนิด */
+    right:.55rem;
+    font-weight:700;
+  }
+  .today-badge{                 /* ปักมุมล่างไม่บังตา */
+    top:auto; right:.55rem; bottom:.45rem;
+    font-size:.68rem; padding:.08rem .4rem;
+  }
+  .chip{                        /* ไม่ใช้ชิปข้อความบนมือถือ */
+    display:none !important;
+  }
+  /* จุดบอกจำนวนงานในวันนั้น */
+  .mobile-dots{
+    position:absolute; left:.55rem; bottom:.5rem;
+    display:flex; align-items:center; gap:.25rem;
+    font-size:.72rem; color:#0ea5e9;
+  }
+  .dot{width:6px;height:6px;border-radius:999px;background:#0ea5e9;opacity:.85}
+  .count-badge{
+    font-variant-numeric: tabular-nums;
+    padding:0 .3rem; border-radius:6px; background:#e0f2fe;
+  }
+
+  /* มีงาน → สีชัดขึ้น อ่านง่าย */
+  .day.has-event{ box-shadow:0 6px 16px rgba(2,132,199,.15) }
+  .day.sun.has-event{ background:#fee2e2 }   /* อาทิตย์มีงาน = แดงอ่อน */
+  .day.sat.has-event{ background:#dbeafe }   /* เสาร์มีงาน = ฟ้าอ่อน */
+}
+
+/* Desktop/Tablet ยังใช้ชิปได้ปกติ แต่ทำให้เบาลง */
+@media (min-width: 481px){
+  .chip{ display:flex }
+}
 </style>
 </head>
 <body class="bg-grad text-slate-800">
