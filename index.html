@@ -117,6 +117,7 @@
   </section>
 </main>
 
+<!-- Day modal -->
 <div id="modal-day" class="modal">
   <div class="modal-card">
     <div class="flex items-start justify-between">
@@ -130,6 +131,7 @@
   </div>
 </div>
 
+<!-- Detail modal -->
 <div id="modal-detail" class="modal">
   <div class="modal-card">
     <div class="flex items-start justify-between">
@@ -147,6 +149,7 @@
   </div>
 </div>
 
+<!-- Admin modal -->
 <div id="modal-admin" class="modal">
   <div class="modal-card">
     <div class="flex items-center justify-between">
@@ -238,6 +241,7 @@
   </div>
 </div>
 
+<!-- Loading -->
 <div id="loading" class="modal"><div class="modal-card text-center">
   <div class="mx-auto mb-2 w-10 h-10 rounded-full border-4 border-sky-400 border-t-transparent animate-spin"></div>
   <div class="text-slate-600">กำลังโหลด…</div>
@@ -391,7 +395,7 @@ function dayCell(d){
   const chips = evs.map(e=>`<div class="chip" title="${escapeHtml(e.title)}">
       <b>${escapeHtml(e.title)}</b> <span class="opacity-70">• ${timeLabel(e)}</span>
     </div>`).join('');
-  const todayBadge = isSameDate(d, STATE.today) ? <span class="today-badge">วันนี้</span>` : '';
+  const todayBadge = isSameDate(d, STATE.today) ? `<span class="today-badge">วันนี้</span>` : '';
   return `<div class="${cellCls}" data-date="${d.toISOString().slice(0,10)}" onclick="openDayModal('${d.toISOString()}')">
     ${todayBadge}
     <div class="num">${d.getDate()}</div>
@@ -421,8 +425,11 @@ function renderMonthGrid(){
 
   $('#monthGrid').html(frag.join(''));
   const monthEvents = eventsInMonth(y,m);
-  $('#monthList').html(monthEvents.map(e=>listItem(e)).join('') 
-    `<div class="text-slate-500">ไม่พบรายการในเดือนนี้</div>`);
+  $('#monthList').html(
+    monthEvents.length > 0
+      ? monthEvents.map(e=>listItem(e)).join('')
+      : `<div class="text-slate-500">ไม่พบรายการในเดือนนี้</div>`
+  );
 }
 
 function renderListView(){
@@ -430,8 +437,10 @@ function renderListView(){
     const ds=[parseAnyDate(e.date), parseAnyDate(e.startDate), parseAnyDate(e.endDate)].filter(Boolean);
     return ds.map(x=>x.getFullYear()+543);
   }))].sort((a,b)=>a-b);
-  $('#filterYear').html(<option value="">ทั้งหมด</option> + years.map(y=>`<option>${y}</option>`).join(''));
-  $('#filterMonth').html(<option value="">ทุกเดือน</option> + thMonths.map((m,i)=>`<option value="${i}">${m}</option>`).join(''));
+
+  $('#filterYear').html(`<option value="">ทั้งหมด</option>` + years.map(y=>`<option>${y}</option>`).join(''));
+  $('#filterMonth').html(`<option value="">ทุกเดือน</option>` + thMonths.map((m,i)=>`<option value="${i}">${m}</option>`).join(''));
+
   applyListFilter();
 }
 
@@ -443,26 +452,29 @@ function applyListFilter(){
   if(q) data = data.filter(e=>[e.title,e.details,e.location,e.owner].join(' ').toLowerCase().includes(q));
   if(y) data = data.filter(e=>eventTouchesYear(e, +y-543));
   if(m!=='') data = data.filter(e=>eventTouchesMonth(e, +m));
-  $('#listContainer').html(data.map(listItem).join('') 
-    `<div class="text-slate-500">ไม่พบรายการ</div>`);
+  $('#listContainer').html(
+    data.length > 0
+      ? data.map(listItem).join('')
+      : `<div class="text-slate-500">ไม่พบรายการ</div>`
+  );
 }
 
 function renderYearView(){
   const year = STATE.cursor.getFullYear();
   const box = [];
   for(let m=0;m<12;m++){
-    const label = ${thMonths[m]} ${year+543};
+    const label = `${thMonths[m]} ${year+543}`;
     const first=new Date(year,m,1), last=new Date(year,m+1,0), startDow=first.getDay();
     const head = `<div class="font-semibold mb-2 text-slate-700">${label}</div>`;
     const gridHead = `<div class="mini-7 mb-1 text-center text-xs text-slate-500"><div>อา</div><div>จ</div><div>อ</div><div>พ</div><div>พฤ</div><div>ศ</div><div>ส</div></div>`;
     let cells = [];
-    for(let i=0;i<startDow;i++) cells.push(<div class="card p-1 text-center text-xs opacity-30"></div>);
+    for(let i=0;i<startDow;i++) cells.push(`<div class="card p-1 text-center text-xs opacity-30"></div>`);
     for(let d=1; d<=last.getDate(); d++){
       const dd=new Date(year,m,d);
       const has = eventsOnDate(dd).length>0;
       cells.push(`<div class="card p-1 text-center text-xs ${has?'bg-sky-50':''}">${d}</div>`);
     }
-    box.push(<div class="card p-3">${head}${gridHead}<div class="mini-7">${cells.join('')}</div></div>);
+    box.push(`<div class="card p-3">${head}${gridHead}<div class="mini-7">${cells.join('')}</div></div>`);
   }
   $('#yearGrid').html(box.join(''));
 }
@@ -483,15 +495,17 @@ function openDayModal(iso){
   $('#modalDaySub').text(`วัน${['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'][d.getDay()]}`);
   const evs = eventsOnDate(d);
   $('#modalDayList').html(
-    evs.map(e=>`
-      <div class="card p-3 cursor-pointer" onclick="openDetail('${e.id}')">
-        <div class="flex items-center gap-2 text-sky-700">
-          <span class="text-xl">${e.emoji||'🗓️'}</span><b>${escapeHtml(e.title)}</b>
-        </div>
-        <div class="text-sm text-slate-600 mt-1">${rangeLabel(e)} ${timeLabel(e)}</div>
-        <div class="text-sm text-slate-600">${escapeHtml(e.location||'')}</div>
-      </div>`
-    ).join('') || <div class="text-slate-500">ไม่มีรายการ</div>
+    evs.length>0
+      ? evs.map(e=>`
+          <div class="card p-3 cursor-pointer" onclick="openDetail('${e.id}')">
+            <div class="flex items-center gap-2 text-sky-700">
+              <span class="text-xl">${e.emoji||'🗓️'}</span><b>${escapeHtml(e.title)}</b>
+            </div>
+            <div class="text-sm text-slate-600 mt-1">${rangeLabel(e)} ${timeLabel(e)}</div>
+            <div class="text-sm text-slate-600">${escapeHtml(e.location||'')}</div>
+          </div>
+        `).join('')
+      : `<div class="text-slate-500">ไม่มีรายการ</div>`
   );
   $('#modal-day').addClass('show');
 }
@@ -523,7 +537,9 @@ function openAdmin(tab='add', id=null){
             STATE.admin.authed=true; $('#adminConn').text($('#connStatus').text());
             confetti({particleCount:80,spread:65});
             $('#modal-admin').addClass('show'); switchTab(tab); if(id) preloadFor(id);
-          }else Swal.fire('ผิดพลาด','รหัสผ่านไม่ถูกต้อง','error');
+          }else{
+            Swal.fire('ผิดพลาด','รหัสผ่านไม่ถูกต้อง','error');
+          }
         }
       });
   }else{
@@ -533,7 +549,7 @@ function openAdmin(tab='add', id=null){
 function closeAdminModal(){ $('#modal-admin').removeClass('show'); }
 
 function switchTab(name){
-   $('.tab').removeClass('active');
+  $('.tab').removeClass('active');
   $(`.tab[data-tab="${name}"]`).addClass('active');
   $('#tab-add,#tab-edit,#tab-delete').addClass('hidden');
   $(`#tab-${name}`).removeClass('hidden');
@@ -555,7 +571,7 @@ function refreshAdminLists(cb){
     $('#edit-form').removeClass('hidden');
     $('#edit-title').val(e.title); $('#edit-emoji').val(e.emoji||'');
     const single = !!e.date && !e.startDate && !e.endDate;
-    $(input[name="edit-mode"][value="${single?'single':'range'}"]).prop('checked',true);
+    $(`input[name="edit-mode"][value="${single?'single':'range'}"]`).prop('checked',true);
     $('#edit-single-wrap').toggleClass('hidden',!single);
     $('#edit-range-wrap').toggleClass('hidden',single);
     $('#edit-date').val(dateForInput(e.date));
@@ -577,6 +593,20 @@ function dateForInput(v){
   return `${d.getFullYear()}-${m}-${dd}`;
 }
 
+function collectForm(prefix, mode){
+  const v = (id)=>$(`#${prefix}-${id}`).val();
+  const payload = {
+    id:'', title:v('title'), emoji:v('emoji'),
+    startTime:v('startTime'), endTime:v('endTime'),
+    location:v('location'), owner:v('owner'), details:v('details'),
+    date:'', startDate:'', endDate:''
+  };
+  if(mode==='single'){ payload.date = v('date'); }
+  else { payload.startDate = v('startDate'); payload.endDate = v('endDate'); }
+  return payload;
+}
+
+/* ================= ACTIONS ================= */
 $('#btnAddConfirm').on('click', async ()=>{
   const mode = $('input[name="add-mode"]:checked').val();
   const payload = collectForm('add', mode);
@@ -594,19 +624,6 @@ $('#btnDeleteConfirm').on('click', async ()=>{
   const ok = await Swal.fire({title:'ยืนยัน', text:'ต้องการลบรายการนี้ใช่หรือไม่?', icon:'warning', showCancelButton:true});
   if(ok.isConfirmed){ await doSave('delete', {id}); }
 });
-
-function collectForm(prefix, mode){
-  const v = (id)=>$(`#${prefix}-${id}`).val();
-  const payload = {
-    id:'', title:v('title'), emoji:v('emoji'),
-    startTime:v('startTime'), endTime:v('endTime'),
-    location:v('location'), owner:v('owner'), details:v('details'),
-    date:'', startDate:'', endDate:''
-  };
-  if(mode==='single'){ payload.date = v('date'); }
-  else { payload.startDate = v('startDate'); payload.endDate = v('endDate'); }
-  return payload;
-}
 
 async function doSave(mode, payload){
   try{
@@ -656,9 +673,6 @@ function renderAll(){
   renderHeader();
   renderMonthGrid();
   renderListView();
-  $('#filterYear').html(`<option value="">ทั้งหมด</option>` + years.map(y=>`<option>${y}</option>`).join(''));
-  $('#filterMonth').html(`<option value="">ทุกเดือน</option>` + thMonths.map((m,i)=>`<option value="${i}">${m}</option>`).join(''));
-}
   renderYearView();
   $('#countAll').text(STATE.events.length);
   const cm=STATE.cursor.getMonth(), cy=STATE.cursor.getFullYear();
@@ -675,8 +689,19 @@ $('#btnViewList').on('click',()=>{ $('#view-list').show(); $('#view-month,#view-
 $('#btnViewYear').on('click',()=>{ $('#view-year').show(); $('#view-month,#view-list').hide(); });
 $('#btnSync').on('click', synchronizeNow);
 $('#btnAdmin').on('click', ()=>openAdmin('add'));
-
 $('#searchInput,#filterMonth,#filterYear').on('input change', applyListFilter);
+
+// toggle add/edit mode sections
+$('body').on('change','input[name="add-mode"]', function(){
+  const m=this.value;
+  $('#add-single-wrap').toggleClass('hidden', m!=='single');
+  $('#add-range-wrap').toggleClass('hidden', m!=='range');
+});
+$('body').on('change','input[name="edit-mode"]', function(){
+  const m=this.value;
+  $('#edit-single-wrap').toggleClass('hidden', m!=='single');
+  $('#edit-range-wrap').toggleClass('hidden', m!=='range');
+});
 
 // static dropdowns
 function fillStaticOptions(){
