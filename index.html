@@ -538,6 +538,25 @@ function renderMonthGrid(){
       : `<div class="text-slate-500">ไม่พบรายการในเดือนนี้</div>`
   );
 }
+// 1) ในฟังก์ชัน dayCell(d) ให้เพิ่ม class ตามมี/ไม่มีงาน
+function dayCell(d){
+  const isSun = d.getDay()===0, isSat = d.getDay()===6;
+  const evs = eventsOnDate(d);
+  const hasEvent = evs.length>0;
+  const cellCls = `day ${isSun?'sun':''} ${isSat?'sat':''} ${hasEvent?'has-event':'no-event'}`;
+
+  const chips = evs.map(e=>`<div class="chip" title="${escapeHtml(e.title)}">
+    <b>${escapeHtml(e.title)}</b><span class="opacity-70"> • ${timeLabel(e)}</span>
+  </div>`).join('');
+
+  const todayBadge = isSameDate(d, STATE.today) ? `<span class="today-badge">วันนี้</span>` : '';
+
+  return `<div class="${cellCls}" data-date="${d.toISOString().slice(0,10)}" onclick="openDayModal('${d.toISOString()}')">
+    ${todayBadge}
+    <div class="num">${d.getDate()}</div>
+    <div class="mt-6">${chips || `<div class="text-xs text-slate-400 no-items">ไม่มีรายการ</div>`}</div>
+  </div>`;
+}
 
 function renderListView(){
   const years = [...new Set(STATE.events.flatMap(e=>{
