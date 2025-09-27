@@ -677,7 +677,7 @@ function openAddFor(iso){
   openAdmin('add');
   $('input[name="add-mode"][value="single"]').prop('checked', true).trigger('change');
   $('#add-date').val(d.toISOString().slice(0,10));
-  $('#edit-location').val('(ไม่มี)');
+  $('#add-location').val('(ไม่มี)');
   setTimeout(()=>$('#add-title').trigger('focus'), 0);
 }
 function refreshAdminLists(cb){
