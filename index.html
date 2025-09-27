@@ -686,6 +686,9 @@ function openAddFor(iso){
   $('input[name="add-mode"][value="single"]').prop('checked', true).trigger('change');
   $('#add-date').val(d.toISOString().slice(0,10));
   $('#add-location').val('(ไม่มี)');
+  $('#add-owner-wrap').empty();
+  addOwnerField('add');
+
   setTimeout(()=>$('#add-title').trigger('focus'), 0);
 }
 function refreshAdminLists(cb){
@@ -907,7 +910,6 @@ function collectOwners(prefix){
 $('#btnAddOwner').on('click', ()=> addOwnerField('add'));
 $('#btnEditOwner').on('click', ()=> addOwnerField('edit'));
 
-  }
 /* START */
 (async function init(){
   STATE.events = loadCache();
