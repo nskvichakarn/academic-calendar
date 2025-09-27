@@ -314,7 +314,11 @@
         <div><label class="text-sm">เวลาเริ่ม</label><input id="edit-startTime" type="time" class="field"></div>
         <div><label class="text-sm">เวลาสิ้นสุด</label><input id="edit-endTime" type="time" class="field"></div>
         <div><label class="text-sm">สถานที่</label><select id="edit-location" class="field"></select></div>
-        <div><label class="text-sm">ผู้รับผิดชอบ</label><select id="edit-owner" class="field"></select></div>
+        <div class="md:col-span-2">
+  <label class="text-sm">ผู้รับผิดชอบ</label>
+  <div id="edit-owner-wrap" class="space-y-2"></div>
+  <button type="button" class="btn mt-2" id="btnEditOwner">+ เพิ่มผู้รับผิดชอบ</button>
+</div>
         <div class="md:col-span-2"><label class="text-sm">รายละเอียด</label><textarea id="edit-details" class="field" rows="3"></textarea></div>
         <div class="md:col-span-2 flex gap-2">
           <button id="btnEditSave" class="btn btn-primary">บันทึกการแก้ไข</button>
