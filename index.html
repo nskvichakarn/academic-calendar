@@ -275,7 +275,11 @@
         <div><label class="text-sm">เวลาสิ้นสุด</label><input id="add-endTime" type="time" class="field"></div>
 
         <div><label class="text-sm">สถานที่</label><select id="add-location" class="field"></select></div>
-        <div><label class="text-sm">ผู้รับผิดชอบ</label><select id="add-owner" class="field"></select></div>
+        <div class="md:col-span-2">
+  <label class="text-sm">ผู้รับผิดชอบ</label>
+  <div id="add-owner-wrap" class="space-y-2"></div>
+  <button type="button" class="btn mt-2" id="btnAddOwner">+ เพิ่มผู้รับผิดชอบ</button>
+</div>
 
         <div class="md:col-span-2"><label class="text-sm">รายละเอียด</label><textarea id="add-details" class="field" rows="3"></textarea></div>
       </div>
