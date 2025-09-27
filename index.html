@@ -753,7 +753,8 @@ function collectForm(prefix, mode){
     id:'', title:v('title'), emoji:v('emoji'),
     startTime:v('startTime'), endTime:v('endTime'),
     owner: collectOwners(prefix),
-    location:v('location'), owner:v('owner'), details:v('details'),
+    location:v('location'), 
+    details:v('details'),
     date:'', startDate:'', endDate:''
   };
   if(mode==='single'){ payload.date = v('date'); }
