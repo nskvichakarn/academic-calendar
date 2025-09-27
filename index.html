@@ -689,7 +689,13 @@ function preloadFor(id){
     $('#delete-select').val(id);
   });
 }
-
+function openAddFor(iso){
+  const d = new Date(iso);
+  openAdmin('add');
+  $('input[name="add-mode"][value="single"]').prop('checked', true).trigger('change');
+  $('#add-date').val(d.toISOString().slice(0,10));
+  setTimeout(()=>$('#add-title').trigger('focus'), 0);
+}
 function refreshAdminLists(cb){
   const opts = STATE.events.map(e=>`<option value="${e.id}">${escapeHtml(e.title)} — ${rangeLabel(e)}</option>`).join('');
   $('#edit-select,#delete-select').html(opts||'<option value="">(ไม่มีข้อมูล)</option>');
