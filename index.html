@@ -700,7 +700,7 @@ function openAddFor(iso){
   $('input[name="add-mode"][value="single"]').prop('checked', true).trigger('change');
   $('#add-date').val(d.toISOString().slice(0,10));
   $('#add-location').val('(ไม่มี)');
-  $('#add-owner-wrap').empty();
+  $('#add-owner').val('');
   addOwnerField('add');
 
   setTimeout(()=>$('#add-title').trigger('focus'), 0);
@@ -743,14 +743,7 @@ function refreshAdminLists(cb){
           .map(s => s.trim())
           .filter(Boolean);
 
-    $('#edit-owner-wrap').empty();             
-    if(owners.length){
-      owners.forEach(o => addOwnerField('edit', o));   
-    }else{
-      addOwnerField('edit', '');                      
-    }
-
-    $('#edit-details').val(e.details || '');
+    $('#edit-owner').val(owner.join(', '));
 
     STATE.admin.currentId = id;
   });
@@ -880,7 +873,7 @@ $('body').on('change','input[name="edit-mode"]', function(){
 // static dropdowns
 function fillStaticOptions(){
   // Emoji
-  $('#add-emoji,#edit-emoji').html(
+  $('#add-emoj0i,#edit-emoji').html(
     `<option value="">(ไม่มี)</option>` + EMOJI_CHOICES.map(e=>`<option>${e}</option>`).join('')
   );
 
@@ -888,43 +881,7 @@ function fillStaticOptions(){
   $('#add-location,#edit-location').html(
     `<option value="">(ไม่มี)</option>` + LOCATIONS.map(s=>`<option>${s}</option>`).join('')
   );
-
-  // Owner: ใช้หลายช่อง → เคลียร์แล้วสร้างช่องแรกให้
-  $('#add-owner-wrap').html('');
-  addOwnerField('add');      // ช่องผู้รับผิดชอบอันแรก
-
-  $('#edit-owner-wrap').html('');
-  addOwnerField('edit');     // ช่องผู้รับผิดชอบอันแรก
 }
-fillStaticOptions();
-// ---------- Owner helpers (one-time) ----------
-function ownerSelectHTML(){
-  return `<select class="field owner-select">
-    ${OWNERS.map(s=>`<option>${s}</option>`).join('')}
-  </select>`;
-}
-
-function addOwnerField(prefix, value=''){
-  const $sel = $(ownerSelectHTML());
-  if (value){
-    if (!OWNERS.includes(value)) { $sel.append(`<option>${value}</option>`); }
-    $sel.val(value);
-  }
-  $(`#${prefix}-owner-wrap`).append($sel);
-}
-
-function collectOwners(prefix){
-  return $(`#${prefix}-owner-wrap .owner-select`)
-    .map(function(){ return $(this).val(); })
-    .get()
-    .filter(Boolean)
-    .join(', ');
-}
-
-// ปุ่มเพิ่มช่องผู้รับผิดชอบ
-$('#btnAddOwner').on('click', ()=> addOwnerField('add'));
-$('#btnEditOwner').on('click', ()=> addOwnerField('edit'));
-
 /* START */
 (async function init(){
   STATE.events = loadCache();
