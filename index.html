@@ -877,6 +877,33 @@ function collectOwners(prefix){
     .join(', ');
   $('#btnAddOwner').on('click', ()=> addOwnerField('add'));
   $('#btnEditOwner').on('click', ()=> addOwnerField('edit'));
+// สร้าง <select> 1 ช่อง สำหรับผู้รับผิดชอบ
+function ownerSelectHTML(){
+  return `<select class="field owner-select">
+    ${OWNERS.map(s=>`<option>${s}</option>`).join('')}
+  </select>`;
+}
+
+// เพิ่มช่องผู้รับผิดชอบใหม่ (prefix = 'add' | 'edit')
+function addOwnerField(prefix, value=''){
+  const $sel = $(ownerSelectHTML());
+  if (value){
+    if(!OWNERS.includes(value)){ $sel.append(`<option>${value}</option>`); }
+    $sel.val(value);
+  }
+  $(`#${prefix}-owner-wrap`).append($sel);
+}
+
+// รวมค่าผู้รับผิดชอบทั้งหมดในฟอร์มนั้น ๆ (คั่นด้วยคอมมา)
+function collectOwners(prefix){
+  return $(`#${prefix}-owner-wrap .owner-select`).map(function(){
+    return $(this).val();
+  }).get().filter(Boolean).join(', ');
+}
+
+// ปุ่มเพิ่มช่องในฟอร์ม Add/Edit
+$('#btnAddOwner').on('click', ()=> addOwnerField('add'));
+$('#btnEditOwner').on('click', ()=> addOwnerField('edit'));
 }
 /* START */
 (async function init(){
