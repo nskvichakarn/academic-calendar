@@ -747,7 +747,7 @@ function refreshAdminLists(cb){
           .map(s => s.trim())
           .filter(Boolean);
 
-    $('#edit-owner').val(owner.join(', '));
+    $('#edit-owner').val(owners.join(', '));
 
     STATE.admin.currentId = id;
   });
