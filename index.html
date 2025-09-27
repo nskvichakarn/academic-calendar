@@ -689,26 +689,55 @@ function openAddFor(iso){
   setTimeout(()=>$('#add-title').trigger('focus'), 0);
 }
 function refreshAdminLists(cb){
-  const opts = STATE.events.map(e=>`<option value="${e.id}">${escapeHtml(e.title)} — ${rangeLabel(e)}</option>`).join('');
-  $('#edit-select,#delete-select').html(opts||'<option value="">(ไม่มีข้อมูล)</option>');
+  const opts = STATE.events
+    .map(e=>`<option value="${e.id}">${escapeHtml(e.title)} — ${rangeLabel(e)}</option>`)
+    .join('');
+  $('#edit-select,#delete-select').html(opts || '<option value="">(ไม่มีข้อมูล)</option>');
+
   $('#edit-select').off().on('change', function(){
-    const id = $(this).val(); const e=STATE.events.find(x=>x.id===id); if(!e){ $('#edit-form').addClass('hidden'); return; }
+    const id = $(this).val();
+    const e  = STATE.events.find(x=>x.id===id);
+
+    if(!e){ $('#edit-form').addClass('hidden'); return; }
     $('#edit-form').removeClass('hidden');
-    $('#edit-title').val(e.title); $('#edit-emoji').val(e.emoji||'');
+
+    // ===== เติมค่าพื้นฐาน =====
+    $('#edit-title').val(e.title);
+    $('#edit-emoji').val(e.emoji || '');
+
     const single = !!e.date && !e.startDate && !e.endDate;
-    $(`input[name="edit-mode"][value="${single?'single':'range'}"]`).prop('checked',true);
-    $('#edit-single-wrap').toggleClass('hidden',!single);
-    $('#edit-range-wrap').toggleClass('hidden',single);
+    $(`input[name="edit-mode"][value="${single?'single':'range'}"]`).prop('checked', true);
+    $('#edit-single-wrap').toggleClass('hidden', !single);
+    $('#edit-range-wrap').toggleClass('hidden',  single);
+
     $('#edit-date').val(dateForInput(e.date));
     $('#edit-startDate').val(dateForInput(e.startDate));
     $('#edit-endDate').val(dateForInput(e.endDate));
-    $('#edit-startTime').val(e.startTime||'');
-    $('#edit-endTime').val(e.endTime||'');
-    $('#edit-location').val(e.location||'');
-    $('#edit-owner').val(e.owner||'');
-    $('#edit-details').val(e.details||'');
-    STATE.admin.currentId=id;
+    $('#edit-startTime').val(e.startTime || '');
+    $('#edit-endTime').val(e.endTime || '');
+    $('#edit-location').val(e.location || '');
+
+    // ===== ผู้รับผิดชอบหลายคน =====
+    // รับทั้งรูปแบบ array หรือ string คั่นด้วย comma
+    const owners = Array.isArray(e.owner)
+      ? e.owner
+      : String(e.owner || '')
+          .split(',')
+          .map(s => s.trim())
+          .filter(Boolean);
+
+    $('#edit-owner-wrap').empty();             // เคลียร์ของเก่า
+    if(owners.length){
+      owners.forEach(o => addOwnerField('edit', o));   // เติม <select> 1 ช่องต่อ 1 คน
+    }else{
+      addOwnerField('edit', '');                      // ไม่มีข้อมูล → ให้ช่องเปล่า 1 ช่อง
+    }
+
+    $('#edit-details').val(e.details || '');
+
+    STATE.admin.currentId = id;
   });
+
   if(cb) cb();
 }
 
