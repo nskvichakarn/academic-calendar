@@ -707,8 +707,6 @@ function openAddFor(iso){
   $('#add-date').val(d.toISOString().slice(0,10));
   $('#add-location').val('(ไม่มี)');
   $('#add-owner').val('');
-  addOwnerField('add');
-
   setTimeout(()=>$('#add-title').trigger('focus'), 0);
 }
 function refreshAdminLists(cb){
