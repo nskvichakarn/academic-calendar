@@ -835,7 +835,34 @@ function fillStaticOptions(){
   $('#add-owner,#edit-owner').html(OWNERS.map(s=>`<option>${s}</option>`).join(''));
 }
 fillStaticOptions();
+// สร้าง <select> 1 ช่อง สำหรับผู้รับผิดชอบ
+function ownerSelectHTML() {
+  return `<select class="field owner-select">
+    ${OWNERS.map(s=>`<option>${s}</option>`).join('')}
+  </select>`;
+}
 
+// เพิ่มช่องผู้รับผิดชอบใหม่ (prefix = 'add' | 'edit')
+function addOwnerField(prefix, value='') {
+  const $sel = $(ownerSelectHTML());
+  if (value) {
+    // ถ้า value ไม่อยู่ใน OWNERS ให้เพิ่ม option ชั่วคราว
+    if (!OWNERS.includes(value)) {
+      $sel.append(`<option>${value}</option>`);
+    }
+    $sel.val(value);
+  }
+  $(`#${prefix}-owner-wrap`).append($sel);
+}
+
+// รวมค่าผู้รับผิดชอบทั้งหมดในฟอร์ม (เชื่อมด้วยคอมมา)
+function collectOwners(prefix){
+  return $(`#${prefix}-owner-wrap .owner-select`)
+    .map(function(){ return $(this).val(); })
+    .get()
+    .filter(Boolean)
+    .join(', ');
+}
 /* START */
 (async function init(){
   STATE.events = loadCache();
