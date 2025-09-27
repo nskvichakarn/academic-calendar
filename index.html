@@ -862,6 +862,8 @@ function collectOwners(prefix){
     .get()
     .filter(Boolean)
     .join(', ');
+  $('#btnAddOwner').on('click', ()=> addOwnerField('add'));
+  $('#btnEditOwner').on('click', ()=> addOwnerField('edit'));
 }
 /* START */
 (async function init(){
