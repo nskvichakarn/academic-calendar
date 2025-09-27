@@ -723,6 +723,7 @@ function collectForm(prefix, mode){
   const payload = {
     id:'', title:v('title'), emoji:v('emoji'),
     startTime:v('startTime'), endTime:v('endTime'),
+    owner: collectOwners(prefix),
     location:v('location'), owner:v('owner'), details:v('details'),
     date:'', startDate:'', endDate:''
   };
