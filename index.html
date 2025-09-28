@@ -65,6 +65,35 @@
   background: rgba(255,255,255,0.25);
   color: #fff;
 }
+/* ================= สีวันมีงานแบบแยกตามชนิดของวัน ================= */
+
+/* วันธรรมดา (ไม่ใช่เสาร์/อาทิตย์) */
+.day.has-event:not(.sat):not(.sun){
+  background: linear-gradient(135deg, #2563eb, #1e3a8a); /* ฟ้าเข้ม → น้ำเงินเข้ม */
+  color:#fff;
+  font-weight:600;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
+}
+
+/* วันเสาร์ */
+.day.sat.has-event{
+  background: linear-gradient(135deg, #60a5fa, #1e40af); /* ฟ้าอ่อน → น้ำเงินเข้ม */
+  color:#fff;
+  font-weight:600;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
+}
+
+/* วันอาทิตย์ */
+.day.sun.has-event{
+  background: linear-gradient(135deg, #f87171, #991b1b); /* แดงอ่อน → แดงเข้ม */
+  color:#fff;
+  font-weight:600;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
+}
+
+/* ให้เลขวันที่/ชิปอ่านง่ายเมื่อพื้นหลังเข้ม */
+.day.has-event .num{ color:#fff; }
+.day.has-event .chip{ background:rgba(255,255,255,.22); color:#fff; }
 /* ===== มือถือ: ทำให้กระชับ อ่านง่าย ===== */
 @media (max-width: 480px){
   .grid-7{ gap:.35rem; }
@@ -123,7 +152,6 @@
 }
 
 /* ปรับสีวันมีงานให้ตัดชัดเจนขึ้น (เดือน/ปี) */
-.day.has-event{ background:#e0f2fe }            /* น้ำเงินอ่อน */
 #yearGrid .card .has-event{ background:#dbeafe } /* สำหรับวิวรายปี */
 </style>
 </head>
