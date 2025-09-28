@@ -252,6 +252,8 @@
     </div>
 <!--รายชื่อบุคลากรสำหรับ autocomplete -->
   <datalist id="staffList"></datalist>
+<!--รายชื่อสถานที่สำหรับ autocomplete -->
+  <datalist id="locationList"></datalist>
     <!-- ADD -->
     <div id="tab-add" class="mt-4">
       <div class="grid md:grid-cols-2 gap-3">
@@ -275,7 +277,7 @@
         <div><label class="text-sm">เวลาเริ่ม</label><input id="add-startTime" type="time" class="field"></div>
         <div><label class="text-sm">เวลาสิ้นสุด</label><input id="add-endTime" type="time" class="field"></div>
 
-        <div><label class="text-sm">สถานที่</label><select id="add-location" class="field"></select></div>
+        <div><label class="text-sm">สถานที่</label><input id="add-location" class="field" placeholder="พิมพ์สถานที่ หรือเลือก" list="locationList"></div>
         <div class="md:col-span-2">
   <label class="text-sm">ผู้รับผิดชอบ</label>
   <input id="add-owner" class="field" placeholder="พิมพ์ชื่อบุคลากร คั่นด้วย , หากมีหลายคน" list="staffList">
@@ -313,7 +315,7 @@
 
         <div><label class="text-sm">เวลาเริ่ม</label><input id="edit-startTime" type="time" class="field"></div>
         <div><label class="text-sm">เวลาสิ้นสุด</label><input id="edit-endTime" type="time" class="field"></div>
-        <div><label class="text-sm">สถานที่</label><select id="edit-location" class="field"></select></div>
+        <div><label class="text-sm">สถานที่</label><input id="edit-location" class="field" placeholder="พิมพ์สถานที่ หรือเลือก" list="locationList"></div>
         <div class="md:col-span-2">
   <label class="text-sm">ผู้รับผิดชอบ</label>
   <input id="edit-owner" class="field" placeholder="พิมพ์ชื่อบุคลากร คั่นด้วย , หากมีหลายคน" list="staffList">
@@ -882,12 +884,13 @@ function fillStaticOptions(){
   );
 
   // Location
-  $('#add-location,#edit-location').html(
-    `<option value="">(ไม่มี)</option>` + LOCATIONS.map(s=>`<option>${s}</option>`).join('')
+  $('#locationList').html(
+    LOCATIONS.map(s=>`<option value="${s}">`).join('')
   );
 }
 /* START */
 (async function init(){
+  fillStaticOptions();
   STATE.events = loadCache();
   renderAll();
   await synchronizeNow();
