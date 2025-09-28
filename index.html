@@ -877,7 +877,7 @@ $('body').on('change','input[name="edit-mode"]', function(){
 // static dropdowns
 function fillStaticOptions(){
   // Emoji
-  $('#add-emoj0i,#edit-emoji').html(
+  $('#add-emoji,#edit-emoji').html(
     `<option value="">(ไม่มี)</option>` + EMOJI_CHOICES.map(e=>`<option>${e}</option>`).join('')
   );
 
