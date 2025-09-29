@@ -34,6 +34,24 @@
   .modal{ position:fixed; inset:0; display:none; place-items:center; z-index:50; background:rgba(15,23,42,.35); backdrop-filter:blur(3px); }
   .modal.show{ display:grid; }
   .modal-card{ width:min(920px,92vw); background:#fff; border-radius:20px; padding:1.25rem; }
+  /* ให้การเลื่อนเกิดในกล่องโมดัล ไม่ใช่พื้นหลัง */
+.modal { overscroll-behavior: contain; }
+.modal-card{
+  max-height: 88vh;          /* สูงไม่เกินจอ */
+  overflow: auto;            /* สกรอลล์ในกล่องได้ */
+  -webkit-overflow-scrolling: touch; /* ลื่นบน iOS */
+}
+
+/* ล็อก body ไม่ให้เลื่อนขณะเปิดโมดัล */
+.body-lock { overflow: hidden; height: 100vh; }
+
+/* (ทางเลือก) ให้ปุ่มบันทึกติดขอบล่าง เห็นตลอด */
+#tab-add .mt-4.flex,
+#tab-edit .md\:col-span-2.flex{
+  position: sticky; bottom: 0;
+  background: #fff; padding: .75rem 0; margin-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
   .field{ width:100%; border:1px solid #e5e7eb; border-radius:12px; padding:.55rem .8rem; }
   .tab{ padding:.45rem .8rem; border-radius:12px; cursor:pointer; }
   .tab.active{ background:#e0f2fe; color:#0369a1; font-weight:600; }
