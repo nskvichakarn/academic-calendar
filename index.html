@@ -38,63 +38,41 @@
   .tab{ padding:.45rem .8rem; border-radius:12px; cursor:pointer; }
   .tab.active{ background:#e0f2fe; color:#0369a1; font-weight:600; }
   @media (max-width:640px){ .day{ min-height:95px } .chip{ font-size:.7rem } }
-  /* วันธรรมดาที่มีงาน */
-.day.has-event {
-  background: linear-gradient(135deg, #93c5fd, #3b82f6); /* ฟ้า → น้ำเงิน */
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(59,130,246,0.25);
-}
-  .day.has-event .num {color:#fff; }
-  .day.has-event .chip {
-    background: rgba(255,255,255,0.3);
-    color:#fff;
-  }
-
-/* วันเสาร์ */
-.day.sat { background: rgba(147,197,253,.25); } /* ฟ้าอ่อน */
-.day.sat.has-event {
-  background: linear-gradient(135deg, #60a5fa, #1e40af); /* ฟ้าอ่อน → น้ำเงินเข้ม */
-  color:#fff;
+/* โทนฟ้านม นุ่มตา */
+:root{
+  --milk-1:#aec8ff;   /* ฟ้านมอ่อน */
+  --milk-2:#6b8cff;   /* น้ำเงินนม */
+  --milk-sat-1:#bed0ff;
+  --milk-sat-2:#5b7dff;
+  --milk-sun-1:#ffd1d1; /* ชมนมนิดๆ */
+  --milk-sun-2:#ff8a8a;
 }
 
-/* วันอาทิตย์ */
-.day.sun { background: rgba(239,68,68,.15); } /* แดงอ่อน */
-.day.sun.has-event {
-  background: linear-gradient(135deg, #f87171, #991b1b); /* แดงอ่อน → แดงเข้ม */
-  color:#fff;
-}
-
-.day.has-event .num { color: #fff; }
-.day.has-event .chip {
-  background: rgba(255,255,255,0.25);
-  color: #fff;
-}
-/* ================= สีวันมีงานแบบแยกตามชนิดของวัน ================= */
-
-/* วันธรรมดา (ไม่ใช่เสาร์/อาทิตย์) */
+/* วันธรรมดาที่มีงาน */
 .day.has-event:not(.sat):not(.sun){
-  background: linear-gradient(135deg, #2563eb, #1e3a8a); /* ฟ้าเข้ม → น้ำเงินเข้ม */
-  color:#fff;
-  font-weight:600;
-  box-shadow:0 6px 16px rgba(0,0,0,.25);
+  background: linear-gradient(135deg,var(--milk-1),var(--milk-2)) !important;
+  color:#fff !important;
+  box-shadow: 0 10px 24px rgba(59,130,246,.22), inset 0 1px 0 rgba(255,255,255,.25) !important;
+  border: 1px solid rgba(255,255,255,.25) !important;
 }
 
-/* วันเสาร์ */
+/* เสาร์/อาทิตย์มีงาน */
 .day.sat.has-event{
-  background: linear-gradient(135deg, #60a5fa, #1e40af); /* ฟ้าอ่อน → น้ำเงินเข้ม */
-  color:#fff;
-  font-weight:600;
-  box-shadow:0 6px 16px rgba(0,0,0,.25);
+  background: linear-gradient(135deg,var(--milk-sat-1),var(--milk-sat-2)) !important;
+  color:#fff !important;
+  box-shadow: 0 10px 24px rgba(59,130,246,.20) !important;
+  border: 1px solid rgba(255,255,255,.25) !important;
+}
+.day.sun.has-event{
+  background: linear-gradient(135deg,var(--milk-sun-1),var(--milk-sun-2)) !important;
+  color:#fff !important;
+  box-shadow: 0 10px 24px rgba(255,120,120,.22) !important;
+  border: 1px solid rgba(255,255,255,.25) !important;
 }
 
-/* วันอาทิตย์ */
-.day.sun.has-event{
-  background: linear-gradient(135deg, #f87171, #991b1b); /* แดงอ่อน → แดงเข้ม */
-  color:#fff;
-  font-weight:600;
-  box-shadow:0 6px 16px rgba(0,0,0,.25);
-}
+/* อ่านง่ายบนพื้นเข้ม */
+.day.has-event .num{ color:#fff !important; }
+.day.has-event .chip{ background:rgba(255,255,255,.20) !important; color:#fff !important; }
 
 /* ให้เลขวันที่/ชิปอ่านง่ายเมื่อพื้นหลังเข้ม */
 .day.has-event .num{ color:#fff; }
