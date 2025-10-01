@@ -187,6 +187,18 @@ function lockBody(v){ $('body').toggleClass('body-lock', !!v); }
 .day.has-event .chip{ background: rgba(255,255,255,.22) !important; color:#fff !important; }
 /* ปรับสีวันมีงานให้ตัดชัดเจนขึ้น (เดือน/ปี) */
 #yearGrid .card .has-event{ background:#dbeafe } /* สำหรับวิวรายปี */
+/* ===== วันหยุดนักขัตฤกษ์ / วันหยุดพิเศษ ===== */
+.day.holiday{
+  background: linear-gradient(135deg,#f59e0b,#b45309); /* ทองเข้ม/นมๆ */
+  color:#fff;
+  font-weight:700;
+  box-shadow:0 6px 18px rgba(180,83,9,.25);
+}
+.day.holiday .num{ color:#fff; }
+.day.holiday .chip{ background:rgba(255,255,255,.24); color:#fff; }
+
+/* ถ้าชนกับเสาร์/อาทิตย์ ให้ยึดสีวันหยุด */
+.day.sat.holiday, .day.sun.holiday{ background: linear-gradient(135deg,#f59e0b,#b45309); }
 </style>
 </head>
 <body class="bg-grad text-slate-800">
