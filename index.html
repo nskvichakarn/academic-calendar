@@ -104,7 +104,23 @@
 }
 .day.holiday .num{ color:#fff; }
 .day.holiday .chip{ background:rgba(255,255,255,.24); color:#fff; }
+/* ===== สีวันหยุดแยกตามประเภท ===== */
+.day.holiday--religion{  /* วันศาสนา */
+  background: linear-gradient(135deg,#fbbf24,#b45309) !important;  /* ทองส้ม */
+  color:#fff !important;
+}
+.day.holiday--royal{     /* วันสำคัญสถาบันพระมหากษัตริย์ */
+  background: linear-gradient(135deg,#c4b5fd,#7c3aed) !important;  /* ม่วง */
+  color:#fff !important;
+}
+.day.holiday--national{  /* วันหยุดราชการ/แห่งชาติทั่วไป */
+  background: linear-gradient(135deg,#6ee7b7,#0f766e) !important;  /* เขียวนม */
+  color:#fff !important;
+}
 
+/* ให้เลข/ชิปอ่านง่าย */
+.day.holiday .num{color:#fff!important}
+.day.holiday .chip{background:rgba(255,255,255,.22)!important;color:#fff!important}
 /* ถ้าชนกับเสาร์/อาทิตย์ ให้ยึดสีวันหยุด */
 .day.sat.holiday, .day.sun.holiday{ background: linear-gradient(135deg,#f59e0b,#b45309); }
 /* ===== มือถือ: ทำให้กระชับ อ่านง่าย ===== */
