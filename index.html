@@ -177,24 +177,28 @@
   #currentMonthLabel{ min-width:auto; padding:.4rem .8rem }
   .btn{ padding:.4rem .7rem; border-radius:12px }
 }
-/* ==== OVERRIDE: โทนเข้มนม + แยกวันธรรมดา/เสาร์/อาทิตย์ ==== */
+/* ==== โทนเข้มสำหรับวันที่มีงาน ==== */
+
+/* วันธรรมดาที่มีงาน */
 .day.has-event:not(.sat):not(.sun){
-  background: linear-gradient(135deg, #a7c0ff, #6b8cff) !important; /* ฟ้านม → น้ำเงินนม */
+  background: linear-gradient(135deg, #2563eb, #1e3a8a) !important; /* น้ำเงินเข้ม */
   color:#fff !important;
   font-weight:600;
-  box-shadow:0 6px 16px rgba(59,130,246,.28) !important;
+  box-shadow:0 6px 16px rgba(30,58,138,.35) !important;
 }
 
+/* วันเสาร์ที่มีงาน */
 .day.sat.has-event{
-  background: linear-gradient(135deg, #b6ccff, #5b7dff) !important; /* ฟ้านมอ่อน */
+  background: linear-gradient(135deg, #0891b2, #155e75) !important; /* ฟ้าน้ำทะเล */
   color:#fff !important;
-  box-shadow:0 6px 16px rgba(59,130,246,.28) !important;
+  box-shadow:0 6px 16px rgba(8,145,178,.35) !important;
 }
 
+/* วันอาทิตย์ที่มีงาน */
 .day.sun.has-event{
-  background: linear-gradient(135deg, #ffc6c6, #ff7a7a) !important; /* แดงนม */
+  background: linear-gradient(135deg, #f87171, #b91c1c) !important; /* แดงเข้ม แต่ยังอ่อนกว่าเดิม */
   color:#fff !important;
-  box-shadow:0 6px 16px rgba(255,99,99,.28) !important;
+  box-shadow:0 6px 16px rgba(185,28,28,.35) !important;
 }
 
 /* อ่านง่ายบนพื้นเข้ม */
