@@ -214,6 +214,37 @@
 
 /* ถ้าชนกับเสาร์/อาทิตย์ ให้ยึดสีวันหยุด */
 .day.sat.holiday, .day.sun.holiday{ background: linear-gradient(135deg,#f59e0b,#b45309); }
+/* --- เสาร์-อาทิตย์ (พื้นฐาน) --- */
+.day.sat{
+  background: #fff0f5 !important;      /* ชมพูอ่อน */
+}
+.day.sun{
+  background: #fff4e5 !important;      /* ส้มพีชอ่อน */
+}
+
+/* ตัวเลขให้อ่านง่ายบนพื้นอ่อน */
+.day.sat .num{ color:#9b2c2c !important; }  /* โทนแดงเข้ม */
+.day.sun .num{ color:#b45309 !important; }  /* โทนส้มเข้ม */
+
+/* --- เสาร์-อาทิตย์ “มีงาน” ให้เด่นชัด --- */
+.day.sat.has-event{
+  background: linear-gradient(135deg,#f9a8d4,#ec4899) !important; /* ชมพูสด */
+  color:#fff !important;
+}
+.day.sun.has-event{
+  background: linear-gradient(135deg,#fbbf24,#f59e0b) !important; /* ทองส้มสด */
+  color:#fff !important;
+}
+.day.sat.has-event .num,
+.day.sun.has-event .num{ color:#fff !important; }
+.day.sat.has-event .chip,
+.day.sun.has-event .chip{ background:rgba(255,255,255,.22) !important; color:#fff !important; }
+
+/* ถ้าเป็น “วันหยุดราชการ” ให้สีวันหยุดชนะเสมอ */
+.day.sat.holiday, .day.sun.holiday{
+  background: linear-gradient(135deg,#f59e0b,#b45309) !important;
+  color:#fff !important;
+}
 </style>
 </head>
 <body class="bg-grad text-slate-800">
