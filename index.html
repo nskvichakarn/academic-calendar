@@ -810,24 +810,41 @@ function eventTouchesMonth(e,monthIdx){
 }
 
 /* ================= MODALS ================= */
-function openDayModal(iso){
-  const d = new Date(iso);
-  $('#modalDayTitle').text(`เหตุการณ์ของวันที่ ${toBuddhistYearStr(d)}`);
-  $('#modalDaySub').text(`วัน${['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'][d.getDay()]}`);
-  const evs = eventsOnDate(d);
-  $('#modalDayList').html(
-    evs.length>0
-      ? evs.map(e=>`
-          <div class="card p-3 cursor-pointer" onclick="openDetail('${e.id}')">
-            <div class="flex items-center gap-2 text-sky-700">
-              <span class="text-xl">${e.emoji||'🗓️'}</span><b>${escapeHtml(e.title)}</b>
-            </div>
-            <div class="text-sm text-slate-600 mt-1">${rangeLabel(e)} ${timeLabel(e)}</div>
-            <div class="text-sm text-slate-600">${escapeHtml(e.location||'')}</div>
-          </div>
-        `).join('')
-      : `<div class="text-slate-500">ไม่มีรายการ</div>`
-  );
+function openDayModal(isoLocal){
+  // isoLocal เช่น "2025-04-06"
+  const [y,m,d] = isoLocal.split('-').map(Number);
+  const dateObj = new Date(y, m-1, d);   // ✅ local date
+
+  $('#modalDayTitle').text(`เหตุการณ์ของวันที่ ${toBuddhistYearStr(dateObj)}`);
+  $('#modalDaySub').text(`วัน${['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'][dateObj.getDay()]}`);
+
+  // ดึงรายการงาน + ตรวจวันหยุด
+  const evs = eventsOnDate(dateObj);
+  const hol = getHolidayByDate(dateObj); // {date,name,type} หรือ null
+
+  // สร้างรายการในโมดัล (แสดงวันหยุดด้วย ถ้ามี)
+  const items = [];
+  if(hol){
+    items.push(`
+      <div class="card p-3">
+        <div class="flex items-center gap-2 text-sky-700">
+          <span class="text-xl">🎌</span><b>${hol.name}</b>
+        </div>
+        <div class="text-sm text-slate-600 mt-1">วันหยุด</div>
+      </div>
+    `);
+  }
+  items.push(...evs.map(e=>`
+      <div class="card p-3 cursor-pointer" onclick="openDetail('${e.id}')">
+        <div class="flex items-center gap-2 text-sky-700">
+          <span class="text-xl">${e.emoji||'🗓️'}</span><b>${escapeHtml(e.title)}</b>
+        </div>
+        <div class="text-sm text-slate-600 mt-1">${rangeLabel(e)} ${timeLabel(e)}</div>
+        <div class="text-sm text-slate-600">${escapeHtml(e.location||'')}</div>
+      </div>
+  `));
+
+  $('#modalDayList').html(items.length ? items.join('') : `<div class="text-slate-500">ไม่มีรายการ</div>`);
   $('#modal-day').addClass('show');
 }
 function closeDayModal(){ $('#modal-day').removeClass('show'); }
