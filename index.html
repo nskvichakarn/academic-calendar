@@ -549,20 +549,6 @@ function parseAnyDate(v){
   }
   const d = new Date(v); return isNaN(d)?null:d;
 }
-  if(typeof v==='string'){
-    const s=v.trim();
-    if(/^\d{4}-\d{2}-\d{2}$/.test(s)){
-      const [Y,M,D]=s.split('-').map(Number);
-      return new Date(Y,M-1,D);
-    }
-    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)){
-      let [D,M,Y]=s.split('/').map(Number);
-      if(Y>2400) Y-=543;
-      return new Date(Y,M-1,D);
-    }
-  }
-  const d = new Date(v); return isNaN(d)?null:d;
-}
 
 function dayRangeArray(ev){
   const d = parseAnyDate(ev.date);
