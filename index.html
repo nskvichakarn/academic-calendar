@@ -609,22 +609,19 @@ function dayCell(d){
   const evs = eventsOnDate(d);
   const has = evs.length > 0;
 
-  // ✅ เช็กวันหยุดจาก function ที่เพิ่มไว้ในข้อ 2
+  // เช็กวันหยุด
   const isHol = isHolidayDate(d) || evs.some(isHolidayEvent);
 
-  // ✅ รวมคลาสทั้งหมด
+  // รวมคลาส
   const cellCls = [
     "day",
     isSun ? "sun" : "",
     isSat ? "sat" : "",
     has   ? "has-event" : "",
-    isHol ? "holiday"   : ""   // << เพิ่มคลาส holiday
+    isHol ? "holiday"   : ""
   ].filter(Boolean).join(" ");
-  
-  // ... ส่วน chips / dots / return เหมือนเดิม ...
-}
 
-  // เดสก์ท็อป: แสดงเป็นชิปข้อความ
+  // เดสก์ท็อป: ชิปข้อความ
   const chipsDesktop = evs.map(e=>`
     <div class="chip" title="${escapeHtml(e.title)}">
       <span>${e.emoji || '🗓️'}</span>
@@ -632,7 +629,7 @@ function dayCell(d){
       <span class="opacity-70">• ${timeLabel(e)}</span>
     </div>`).join('');
 
-  // มือถือ: แสดง “จุด + จำนวนงาน”
+  // มือถือ: จุด + จำนวนงาน
   const dotsMobile = has
     ? `<div class="mobile-dots" aria-label="มี ${evs.length} รายการ">
          <span class="dot"></span><span class="count-badge">${evs.length}</span>
@@ -649,8 +646,8 @@ function dayCell(d){
   ${todayBadge}
   <div class="num">${d.getDate()}</div>
   <div class="mt-6">
-    ${chipsDesktop || ''} <!-- เดสก์ท็อป -->
-    ${dotsMobile}         <!-- มือถือ -->
+    ${chipsDesktop || ''}  <!-- เดสก์ท็อป -->
+    ${dotsMobile}          <!-- มือถือ -->
     ${(!has && window.innerWidth > 480) ? `<div class="text-xs text-slate-400">ไม่มีรายการ</div>` : ''}
   </div>
 </div>`;
