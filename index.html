@@ -664,23 +664,23 @@ function dayCell(d){
   const evs = eventsOnDate(d);
 
   // ===== วันหยุด =====
-  // ต้องมีฟังก์ชัน getHolidayByDate(d) ตามข้อ 2 และ HOLIDAYS เป็นแบบ {date,name}
-  const holObj = getHolidayByDate(d);     // ถ้าเป็นวันหยุดจะได้ {date:"YYYY-MM-DD", name:"..."}
+  const holObj = getHolidayByDate(d);      // {date,name,type} หรือ null
   const isHol  = !!holObj || evs.some(isHolidayEvent);
 
-  // มีรายการถือรวมทั้ง "งาน" และ "วันหยุด"
+  // ถือว่า “มีรายการ” ถ้ามีงานหรือมีวันหยุด
   const has = evs.length > 0 || !!holObj;
 
-  // คลาสของ cell
+  // คลาสของเซลล์ (ใส่ชนิดวันหยุดเพิ่มด้วย)
   const cellCls = [
     "day",
     isSun ? "sun" : "",
     isSat ? "sat" : "",
     has   ? "has-event" : "",
-    isHol ? "holiday"   : ""
+    isHol ? "holiday"   : "",
+    holObj && holObj.type ? `holiday--${holObj.type}` : ""
   ].filter(Boolean).join(" ");
 
-  // ชิปแสดง "วันหยุด" (จะขึ้นแม้ไม่มีงานอื่น)
+  // ชิป “วันหยุด” (แสดงแม้ไม่มีงานอื่น)
   const chipHoliday = holObj ? `
     <div class="chip" title="${holObj.name}">
       <span>🎌</span>
@@ -688,7 +688,7 @@ function dayCell(d){
       <span class="opacity-70">• วันหยุด</span>
     </div>` : "";
 
-  // ชิปแสดงรายการงาน (เดสก์ท็อป)
+  // ชิปงาน (เดสก์ท็อป)
   const chipsDesktop = `
     ${chipHoliday}
     ${evs.map(e=>`
@@ -699,7 +699,7 @@ function dayCell(d){
       </div>`).join('')}
   `;
 
-  // มือถือ: จุด + จำนวน (รวมวันหยุดด้วย)
+  // มือถือ: จำนวนทั้งหมด = งาน + วันหยุด
   const countAll = evs.length + (holObj ? 1 : 0);
   const dotsMobile = has
     ? `<div class="mobile-dots" aria-label="มี ${countAll} รายการ">
@@ -709,11 +709,14 @@ function dayCell(d){
 
   const todayBadge = isSameDate(d, STATE.today) ? `<span class="today-badge">วันนี้</span>` : '';
 
+  // ใช้ localISODate(d) แทน toISOString() เพื่อกันวันเลื่อน
+  const isoLocal = localISODate(d);
+
   return `
 <div class="${cellCls} day-cell"
-     data-iso="${localISODate(d)}"
-     onclick="openDayModal('${localISODate(d)}')"
-     ondblclick="openAddFor('${localISODate(d)}')">
+     data-iso="${isoLocal}"
+     onclick="openDayModal('${isoLocal}')"
+     ondblclick="openAddFor('${isoLocal}')">
   ${todayBadge}
   <div class="num">${d.getDate()}</div>
   <div class="mt-6">
