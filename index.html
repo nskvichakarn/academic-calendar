@@ -490,6 +490,10 @@ function isHolidayDate(d){
   const iso = localISODate(d);
   return HOLIDAYS.includes(iso);
 }
+function getHolidayByDate(d){
+  const iso = d.toISOString().slice(0,10); // แปลงเป็น YYYY-MM-DD
+  return HOLIDAYS.find(h => h.date === iso) || null;
+}
 function isHolidayEvent(e){
   const text = [e.title,e.details].join(" ").toLowerCase();
   return HOLI_KEYWORDS.some(k => text.includes(k.toLowerCase()));
