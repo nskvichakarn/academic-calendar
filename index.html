@@ -659,13 +659,19 @@ function escapeHtml(t){ return (t??'').toString().replace(/[&<>"]/g,s=>({'&':'&a
 
 function dayCell(d){
   const isSun = d.getDay()===0, isSat = d.getDay()===6;
+
+  // งานที่อยู่ในวันนั้น
   const evs = eventsOnDate(d);
-  const has = evs.length > 0;
 
-  // เช็กวันหยุด
-  const isHol = isHolidayDate(d) || evs.some(isHolidayEvent);
+  // ===== วันหยุด =====
+  // ต้องมีฟังก์ชัน getHolidayByDate(d) ตามข้อ 2 และ HOLIDAYS เป็นแบบ {date,name}
+  const holObj = getHolidayByDate(d);     // ถ้าเป็นวันหยุดจะได้ {date:"YYYY-MM-DD", name:"..."}
+  const isHol  = !!holObj || evs.some(isHolidayEvent);
 
-  // รวมคลาส
+  // มีรายการถือรวมทั้ง "งาน" และ "วันหยุด"
+  const has = evs.length > 0 || !!holObj;
+
+  // คลาสของ cell
   const cellCls = [
     "day",
     isSun ? "sun" : "",
@@ -674,33 +680,45 @@ function dayCell(d){
     isHol ? "holiday"   : ""
   ].filter(Boolean).join(" ");
 
-  // เดสก์ท็อป: ชิปข้อความ
-  const chipsDesktop = evs.map(e=>`
-    <div class="chip" title="${escapeHtml(e.title)}">
-      <span>${e.emoji || '🗓️'}</span>
-      <span>${escapeHtml(e.title)}</span>
-      <span class="opacity-70">• ${timeLabel(e)}</span>
-    </div>`).join('');
+  // ชิปแสดง "วันหยุด" (จะขึ้นแม้ไม่มีงานอื่น)
+  const chipHoliday = holObj ? `
+    <div class="chip" title="${holObj.name}">
+      <span>🎌</span>
+      <span>${holObj.name}</span>
+      <span class="opacity-70">• วันหยุด</span>
+    </div>` : "";
 
-  // มือถือ: จุด + จำนวนงาน
+  // ชิปแสดงรายการงาน (เดสก์ท็อป)
+  const chipsDesktop = `
+    ${chipHoliday}
+    ${evs.map(e=>`
+      <div class="chip" title="${escapeHtml(e.title)}">
+        <span>${e.emoji || '🗓️'}</span>
+        <span>${escapeHtml(e.title)}</span>
+        <span class="opacity-70">• ${timeLabel(e)}</span>
+      </div>`).join('')}
+  `;
+
+  // มือถือ: จุด + จำนวน (รวมวันหยุดด้วย)
+  const countAll = evs.length + (holObj ? 1 : 0);
   const dotsMobile = has
-    ? `<div class="mobile-dots" aria-label="มี ${evs.length} รายการ">
-         <span class="dot"></span><span class="count-badge">${evs.length}</span>
+    ? `<div class="mobile-dots" aria-label="มี ${countAll} รายการ">
+         <span class="dot"></span><span class="count-badge">${countAll}</span>
        </div>`
     : '';
 
   const todayBadge = isSameDate(d, STATE.today) ? `<span class="today-badge">วันนี้</span>` : '';
 
   return `
-<div class="${cellCls} day-cell" 
-     data-iso="${d.toISOString()}" 
-     onclick="openDayModal('${d.toISOString()}')" 
+<div class="${cellCls} day-cell"
+     data-iso="${d.toISOString()}"
+     onclick="openDayModal('${d.toISOString()}')"
      ondblclick="openAddFor('${d.toISOString()}')">
   ${todayBadge}
   <div class="num">${d.getDate()}</div>
   <div class="mt-6">
-    ${chipsDesktop || ''}  <!-- เดสก์ท็อป -->
-    ${dotsMobile}          <!-- มือถือ -->
+    ${chipsDesktop}
+    ${dotsMobile}
     ${(!has && window.innerWidth > 480) ? `<div class="text-xs text-slate-400">ไม่มีรายการ</div>` : ''}
   </div>
 </div>`;
