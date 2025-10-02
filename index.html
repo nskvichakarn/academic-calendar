@@ -479,7 +479,7 @@ const HOLI_KEYWORDS = [
 ];
 
 function isHolidayDate(d){
-  const iso = d.toISOString().slice(0,10);
+  const iso = localISODate(d);
   return HOLIDAYS.includes(iso);
 }
 function isHolidayEvent(e){
