@@ -488,10 +488,10 @@ const HOLI_KEYWORDS = [
 
 function isHolidayDate(d){
   const iso = localISODate(d);
-  return HOLIDAYS.includes(iso);
+  return HOLIDAYS.some(h => h.date === iso);
 }
 function getHolidayByDate(d){
-  const iso = d.toISOString().slice(0,10); // แปลงเป็น YYYY-MM-DD
+  const iso = localISODate(d); // แปลงเป็น YYYY-MM-DD
   return HOLIDAYS.find(h => h.date === iso) || null;
 }
 function isHolidayEvent(e){
@@ -711,9 +711,9 @@ function dayCell(d){
 
   return `
 <div class="${cellCls} day-cell"
-     data-iso="${d.toISOString()}"
-     onclick="openDayModal('${d.toISOString()}')"
-     ondblclick="openAddFor('${d.toISOString()}')">
+     data-iso="${localISODate(d)}"
+     onclick="openDayModal('${localISODate(d)}')"
+     ondblclick="openAddFor('${localISODate(d)}')">
   ${todayBadge}
   <div class="num">${d.getDate()}</div>
   <div class="mt-6">
