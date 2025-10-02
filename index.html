@@ -608,7 +608,21 @@ function dayCell(d){
   const isSun = d.getDay()===0, isSat = d.getDay()===6;
   const evs = eventsOnDate(d);
   const has = evs.length > 0;
-  const cellCls = `day ${isSun?'sun':''} ${isSat?'sat':''} ${has?'has-event':''}`;
+
+  // ✅ เช็กวันหยุดจาก function ที่เพิ่มไว้ในข้อ 2
+  const isHol = isHolidayDate(d) || evs.some(isHolidayEvent);
+
+  // ✅ รวมคลาสทั้งหมด
+  const cellCls = [
+    "day",
+    isSun ? "sun" : "",
+    isSat ? "sat" : "",
+    has   ? "has-event" : "",
+    isHol ? "holiday"   : ""   // << เพิ่มคลาส holiday
+  ].filter(Boolean).join(" ");
+  
+  // ... ส่วน chips / dots / return เหมือนเดิม ...
+}
 
   // เดสก์ท็อป: แสดงเป็นชิปข้อความ
   const chipsDesktop = evs.map(e=>`
