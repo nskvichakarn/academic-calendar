@@ -675,7 +675,7 @@ function dayCell(d){
     "day",
     isSun ? "sun" : "",
     isSat ? "sat" : "",
-    has   ? "has-event" : "",
+    (evs.length > 0) ? "has-event" : "",
     isHol ? "holiday"   : "",
     holObj && holObj.type ? `holiday--${holObj.type}` : ""
   ].filter(Boolean).join(" ");
