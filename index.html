@@ -1325,6 +1325,8 @@ function attachEmojiPicker(fieldId){
 /* START */
 (async function init(){
   fillStaticOptions();
+  attachEmojiPicker('add-emoji');
+  attachEmojiPicker('edit-emoji');
   STATE.events = loadCache();
   renderAll();
   await synchronizeNow();
