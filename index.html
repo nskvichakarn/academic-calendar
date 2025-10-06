@@ -249,6 +249,23 @@
   background: linear-gradient(135deg,#f59e0b,#b45309) !important;
   color:#fff !important;
 }
+/* === Emoji Picker === */
+.emoji-modal{ position:fixed; inset:0; display:none; place-items:center; z-index:60;
+  background:rgba(15,23,42,.35); backdrop-filter:blur(3px); }
+.emoji-modal.show{ display:grid; }
+.emoji-box{ width:min(680px,92vw); background:#fff; border-radius:16px; padding:12px; }
+.emoji-grid{ display:grid; grid-template-columns:repeat(10, 1fr); gap:6px; }
+.emoji-item{ font-size:22px; display:grid; place-items:center; padding:8px; border-radius:10px;
+  cursor:pointer; border:1px solid #e5e7eb; }
+.emoji-item:hover{ background:#f1f5f9; }
+.emoji-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px }
+.emoji-tabs{ display:flex; gap:6px; flex-wrap:wrap; margin:8px 0 10px }
+.emoji-tab{ padding:.25rem .55rem; border-radius:999px; background:#f1f5f9; cursor:pointer; font-size:.9rem }
+.emoji-tab.active{ background:#dbeafe; color:#1d4ed8; font-weight:600 }
+.emoji-search{ width:100%; border:1px solid #e5e7eb; border-radius:10px; padding:.5rem .75rem; margin-bottom:10px }
+.emoji-trigger{ display:flex; align-items:center; gap:.5rem; }
+.emoji-trigger .preview{ width:28px; height:28px; display:grid; place-items:center; border-radius:8px; background:#f1f5f9 }
+@media (max-width:520px){ .emoji-grid{ grid-template-columns:repeat(7,1fr) } }
 </style>
 </head>
 <body class="bg-grad text-slate-800">
