@@ -634,9 +634,7 @@ function fillStaffList(){
     .sort((a,b)=>a.localeCompare(b,'th'));
   $('#staffList').html(options.map(n=>`<option value="${n}">`).join(''));
 }
-function lockBody(v){
-  $('body').toggleClass('body-lock', !!v);
-}
+
 /* ================= UTIL: Date/Thai ================= */
 const thMonths = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
 function toBuddhistYearStr(d){
