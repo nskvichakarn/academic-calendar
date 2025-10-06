@@ -344,7 +344,18 @@
     <div id="yearGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
   </section>
 </main>
-
+<!-- Emoji Picker -->
+<div id="emojiPicker" class="emoji-modal" aria-hidden="true">
+  <div class="emoji-box card">
+    <div class="emoji-head">
+      <div class="text-slate-700 font-semibold">เลือกอิโมจิ</div>
+      <button class="btn" id="emojiCloseBtn">ปิด</button>
+    </div>
+    <input id="emojiSearch" class="emoji-search" placeholder="พิมพ์ค้นหา เช่น ประชุม กีฬา เอกสาร …">
+    <div id="emojiTabs" class="emoji-tabs"></div>
+    <div id="emojiGrid" class="emoji-grid"></div>
+  </div>
+</div>
 <!-- Day modal -->
 <div id="modal-day" class="modal">
   <div class="modal-card">
