@@ -1148,10 +1148,14 @@ $('body').on('change','input[name="edit-mode"]', function(){
 
 // static dropdowns
 function fillStaticOptions(){
-  // Emoji
-  $('#add-emoji,#edit-emoji').html(
-    `<option value="">(ไม่มี)</option>` + EMOJI_CHOICES.map(e=>`<option>${e}</option>`).join('')
-  );
+  // Emoji แบบหมวดหมู่
+let emojiHTML = `<option value="">(ไม่มี)</option>`;
+for (const [group, list] of Object.entries(EMOJI_GROUPS)) {
+  emojiHTML += `<optgroup label="${group}">`;
+  emojiHTML += list.map(e => `<option value="${e}">${e}</option>`).join('');
+  emojiHTML += `</optgroup>`;
+}
+$('#add-emoji,#edit-emoji').html(emojiHTML);
 
   // Location
   $('#locationList').html(
