@@ -502,6 +502,9 @@ const ADMIN_PASSWORD = 'admin1234';
 const CACHE_KEY = 'nsph_events_cache_v1';
 const CACHE_AT  = 'nsph_events_cache_at_v1';
 
+function lockBody(v){
+  $('body').toggleClass('body-lock', !!v);
+}
 /* ===== อิโมจิแบบหมวดหมู่ (ฉบับโรงเรียน) ===== */
 const EMOJI_GROUPS = {
   "🏫 หน้าเสาธง / พิธีการ": ["🏫","🔔","🎖️","🎗️","🪄","📢","🇹🇭"],
