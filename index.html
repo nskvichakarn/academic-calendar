@@ -1197,6 +1197,131 @@ $('#add-emoji,#edit-emoji').html(emojiHTML);
     LOCATIONS.map(s=>`<option value="${s}">`).join('')
   );
 }
+/* ===== Emoji Picker (Grid) ===== */
+
+/* กลุ่มอิโมจิ (เพิ่ม/แก้ได้ตามใจ) */
+const EMOJI_GROUPS = [
+  { key:'acad',  name:'วิชาการ',  items:['🎓','📚','✏️','📝','🧪','🔬','🧮','🧠','🖥️','🧑🏻‍🏫','📖','🧾'] },
+  { key:'meet',  name:'ประชุม/แจ้ง', items:['📢','🗓️','📅','📌','📍','🛎️','🔔','🗣️','🤝','💬'] },
+  { key:'school',name:'งานโรงเรียน', items:['🏫','🏆','🎯','🎪','🎉','🎊','💡','🧹','🧰','🧯'] },
+  { key:'travel',name:'ทัศนศึกษา/นอกสถานที่', items:['🚌','🚐','🚗','✈️','⛺','🏖️','🗺️','🧳'] },
+  { key:'sport', name:'กีฬา', items:['⚽','🏀','🏐','🏃‍♂️','🏃‍♀️','🏅','🥇','🏊‍♂️'] },
+  { key:'alert', name:'แจ้งเตือน', items:['⚠️','🚨','⏰','⌛','📣','🧭'] },
+  { key:'misc',  name:'อื่นๆ', items:['💻','🧪','🧬','🔧','🧱','🌱','🌤️','🎨','🎵'] }
+];
+
+let EMOJI_TARGET = null; // id ของ input/select ที่จะใส่ค่า
+
+// แปลงคำไทยง่ายๆ -> กลุ่มที่เกี่ยว (ไว้ช่วยค้น)
+const EMOJI_KEYWORDS = [
+  {kw:['เรียน','วิชาการ','ครู','เอกสาร'], group:'acad'},
+  {kw:['ประชุม','แจ้ง','ประกาศ','นัดหมาย'], group:'meet'},
+  {kw:['โรงเรียน','กิจกรรม','งาน'], group:'school'},
+  {kw:['ทัศนศึกษา','ออกนอกสถานที่','เดินทาง'], group:'travel'},
+  {kw:['กีฬา','แข่ง','แข่งกีฬา'], group:'sport'},
+  {kw:['เตือน','ด่วน','สำคัญ'], group:'alert'}
+];
+
+function openEmojiPicker(targetId){
+  EMOJI_TARGET = targetId;
+  $('#emojiPicker').addClass('show');
+  renderEmojiTabs();
+  renderEmojiGrid(EMOJI_GROUPS[0].key);
+  $('#emojiSearch').val('');
+}
+
+function closeEmojiPicker(){
+  $('#emojiPicker').removeClass('show');
+  EMOJI_TARGET = null;
+}
+
+function renderEmojiTabs(activeKey){
+  const html = EMOJI_GROUPS.map(g =>
+    `<div class="emoji-tab ${g.key===activeKey?'active':''}" data-key="${g.key}">${g.name}</div>`
+  ).join('');
+  $('#emojiTabs').html(html);
+  $('#emojiTabs .emoji-tab').off().on('click', function(){
+    $('#emojiTabs .emoji-tab').removeClass('active');
+    $(this).addClass('active');
+    renderEmojiGrid($(this).data('key'));
+  });
+}
+
+function renderEmojiGrid(groupKey){
+  const group = EMOJI_GROUPS.find(g=>g.key===groupKey) || EMOJI_GROUPS[0];
+  const html = group.items.map(e=>`<div class="emoji-item" data-emoji="${e}">${e}</div>`).join('');
+  $('#emojiGrid').html(html);
+  $('#emojiGrid .emoji-item').off().on('click', function(){
+    const emo = $(this).data('emoji');
+
+    // ถ้าเป้าหมายเป็น <select> -> select option ให้ตรง
+    const $t = $('#'+EMOJI_TARGET);
+    if($t.is('select')){
+      if($t.find(`option[value="${emo}"]`).length===0){ $t.append(`<option value="${emo}">${emo}</option>`); }
+      $t.val(emo).trigger('change');
+    }else{
+      $t.val(emo).trigger('input');
+    }
+
+    // อัปเดตปุ่ม preview
+    $(`button[data-emoji-bind="${EMOJI_TARGET}"] .preview`).text(emo || '—');
+
+    closeEmojiPicker();
+  });
+}
+
+$('#emojiCloseBtn').on('click', closeEmojiPicker);
+
+// ค้นหา
+$('#emojiSearch').on('input', function(){
+  const q = $(this).val().trim().toLowerCase();
+  if(!q){ renderEmojiGrid($('.emoji-tab.active').data('key')); return; }
+
+  // เดา group จากคีย์เวิร์ดไทย
+  let key = null;
+  for(const m of EMOJI_KEYWORDS){
+    if(m.kw.some(w => q.includes(w))){ key = m.group; break; }
+  }
+  // ถ้าไม่เจอ ใช้รวมทุกกลุ่ม
+  const items = (key ? [EMOJI_GROUPS.find(g=>g.key===key)] : EMOJI_GROUPS)
+    .filter(Boolean).flatMap(g => g.items);
+
+  const uniq = [...new Set(items)];
+  $('#emojiTabs .emoji-tab').removeClass('active');
+  const html = uniq.map(e=>`<div class="emoji-item" data-emoji="${e}">${e}</div>`).join('');
+  $('#emojiGrid').html(html);
+  $('#emojiGrid .emoji-item').off().on('click', function(){
+    const emo = $(this).data('emoji');
+    const $t = $('#'+EMOJI_TARGET);
+    if($t.is('select')){
+      if($t.find(`option[value="${emo}"]`).length===0){ $t.append(`<option value="${emo}">${emo}</option>`); }
+      $t.val(emo).trigger('change');
+    }else{
+      $t.val(emo).trigger('input');
+    }
+    $(`button[data-emoji-bind="${EMOJI_TARGET}"] .preview`).text(emo || '—');
+    closeEmojiPicker();
+  });
+});
+
+/* ผูกปุ่มกับฟิลด์อิโมจิ (ใช้กับ add-emoji / edit-emoji ที่มีอยู่) */
+function attachEmojiPicker(fieldId){
+  const $sel = $('#'+fieldId);
+  // ซ่อน select เดิม แต่ยังคงอยู่เพื่อความเข้ากันได้
+  $sel.hide();
+
+  const btn = $(`
+    <button type="button" class="btn emoji-trigger" data-emoji-bind="${fieldId}">
+      <span class="preview">${$sel.val()||'—'}</span>
+      <span>เลือกอิโมจิ…</span>
+    </button>
+  `);
+  $sel.after(btn);
+
+  btn.on('click', ()=> openEmojiPicker(fieldId));
+}
+
+/* เรียกใช้หลังจากสร้างฟอร์มแล้ว */
 /* START */
 (async function init(){
   fillStaticOptions();
