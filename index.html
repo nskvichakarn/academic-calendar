@@ -1228,6 +1228,7 @@ const EMOJI_KEYWORDS = [
 function openEmojiPicker(targetId){
   EMOJI_TARGET = targetId;
   $('#emojiPicker').addClass('show');
+  lockBody(true);
   renderEmojiTabs();
   renderEmojiGrid(EMOJI_GROUP_LIST[0].key);
   $('#emojiSearch').val('');
@@ -1235,6 +1236,7 @@ function openEmojiPicker(targetId){
 
 function closeEmojiPicker(){
   $('#emojiPicker').removeClass('show');
+  lockBody(false);
   EMOJI_TARGET = null;
 }
 
