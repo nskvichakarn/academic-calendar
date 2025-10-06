@@ -1200,7 +1200,7 @@ $('#add-emoji,#edit-emoji').html(emojiHTML);
 /* ===== Emoji Picker (Grid) ===== */
 
 /* กลุ่มอิโมจิ (เพิ่ม/แก้ได้ตามใจ) */
-const EMOJI_GROUPS = [
+const EMOJI_GROUP_LIST = [
   { key:'acad',  name:'วิชาการ',  items:['🎓','📚','✏️','📝','🧪','🔬','🧮','🧠','🖥️','🧑🏻‍🏫','📖','🧾'] },
   { key:'meet',  name:'ประชุม/แจ้ง', items:['📢','🗓️','📅','📌','📍','🛎️','🔔','🗣️','🤝','💬'] },
   { key:'school',name:'งานโรงเรียน', items:['🏫','🏆','🎯','🎪','🎉','🎊','💡','🧹','🧰','🧯'] },
@@ -1226,7 +1226,7 @@ function openEmojiPicker(targetId){
   EMOJI_TARGET = targetId;
   $('#emojiPicker').addClass('show');
   renderEmojiTabs();
-  renderEmojiGrid(EMOJI_GROUPS[0].key);
+  renderEmojiGrid(EMOJI_GROUP_LIST[0].key);
   $('#emojiSearch').val('');
 }
 
@@ -1236,7 +1236,7 @@ function closeEmojiPicker(){
 }
 
 function renderEmojiTabs(activeKey){
-  const html = EMOJI_GROUPS.map(g =>
+  const html = EMOJI_GROUP_LIST.map(g =>
     `<div class="emoji-tab ${g.key===activeKey?'active':''}" data-key="${g.key}">${g.name}</div>`
   ).join('');
   $('#emojiTabs').html(html);
@@ -1248,7 +1248,7 @@ function renderEmojiTabs(activeKey){
 }
 
 function renderEmojiGrid(groupKey){
-  const group = EMOJI_GROUPS.find(g=>g.key===groupKey) || EMOJI_GROUPS[0];
+  const group = EMOJI_GROUP_LIST.find(g=>g.key===groupKey) || EMOJI_GROUP_LIST[0];
   const html = group.items.map(e=>`<div class="emoji-item" data-emoji="${e}">${e}</div>`).join('');
   $('#emojiGrid').html(html);
   $('#emojiGrid .emoji-item').off().on('click', function(){
@@ -1283,7 +1283,7 @@ $('#emojiSearch').on('input', function(){
     if(m.kw.some(w => q.includes(w))){ key = m.group; break; }
   }
   // ถ้าไม่เจอ ใช้รวมทุกกลุ่ม
-  const items = (key ? [EMOJI_GROUPS.find(g=>g.key===key)] : EMOJI_GROUPS)
+  const items = (key ? [EMOJI_GROUP_LIST.find(g=>g.key===key)] : EMOJI_GROUP_LIST)
     .filter(Boolean).flatMap(g => g.items);
 
   const uniq = [...new Set(items)];
