@@ -330,6 +330,45 @@
 </div>
 
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-24">
+  <div class="mb-5 space-y-4">
+  
+  <div class="card p-2 flex items-center gap-3 overflow-hidden bg-white/90 border border-slate-100">
+    <div class="flex-shrink-0 px-2 py-1 bg-red-100 text-red-600 text-xs font-bold rounded-lg animate-pulse">
+      📢 ประกาศด่วน
+    </div>
+    <div class="marquee-wrap w-full text-sm text-slate-600">
+      <div class="marquee-text" id="announceText">
+        ยินดีต้อนรับสู่ระบบปฏิทินงานวิชาการ... ติดต่อสอบถามได้ที่ห้องวิชาการ อาคาร 1
+      </div>
+    </div>
+  </div>
+
+  <div class="card countdown-card p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="text-3xl">⏳</div>
+      <div>
+        <h3 class="font-bold text-slate-800 text-lg" id="cdTitle">นับถอยหลังสู่วันปีใหม่</h3>
+        <p class="text-xs text-slate-500" id="cdSub">เตรียมตัวให้พร้อม!</p>
+      </div>
+    </div>
+    
+    <div class="flex gap-2">
+      <div class="cd-box">
+        <div class="cd-num" id="cd-d">-</div><div class="cd-label">วัน</div>
+      </div>
+      <div class="cd-box">
+        <div class="cd-num" id="cd-h">-</div><div class="cd-label">ชม.</div>
+      </div>
+      <div class="cd-box">
+        <div class="cd-num" id="cd-m">-</div><div class="cd-label">นาที</div>
+      </div>
+      <div class="cd-box">
+        <div class="cd-num" id="cd-s">-</div><div class="cd-label">วิ</div>
+      </div>
+    </div>
+  </div>
+
+</div>
   <section id="view-month" class="space-y-3">
     <div class="grid-7">
       <div class="dow">อา</div><div class="dow">จ</div><div class="dow">อ</div><div class="dow">พ</div><div class="dow">พฤ</div><div class="dow">ศ</div><div class="dow">ส</div>
