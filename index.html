@@ -1121,7 +1121,10 @@ async function doSave(mode, payload){
 }
 
 /* ================= LOADING ================= */
-function showLoading(v){ $('#loading').toggleClass('show', !!v); }
+function showLoading(v){ 
+  // ไม่ต้องทำอะไรเลย (ปิดการแสดงผล)
+  // $('#loading').toggleClass('show', !!v); 
+}
 
 /* ================= SYNC & INIT ================= */
 async function synchronizeNow(){
