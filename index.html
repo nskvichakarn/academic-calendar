@@ -34,6 +34,14 @@
   .today-badge{ position:absolute; top:.5rem; right:2.2rem; background:linear-gradient(135deg,#0ea5e9,#38bdf8); color:#fff; padding:.05rem .45rem; border-radius:999px; font-size:.7rem; font-weight:700; }
   .chip{ display:block; font-size:.78rem; padding:.18rem .45rem; border-radius:12px; background:#f0f9ff; color:#0369a1; margin:.22rem 0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .chip:hover{ background:#e0f2fe }
+  /* สีตามกลุ่มงาน */
+  .group-badge{ display:inline-flex; align-items:center; gap:.25rem; }
+  .chip.group-chip{ color:#0f172a; box-shadow:0 8px 18px rgba(15,23,42,.06); display:inline-flex; align-items:center; gap:.35rem; }
+  .chip.group-chip .group-badge{ font-size:.7rem; padding:.08rem .45rem; border-radius:999px; background:rgba(255,255,255,.8); font-weight:700; color:#0f172a; }
+  .group-general{ background:linear-gradient(135deg,#fef3c7,#f59e0b) !important; color:#7c2d12 !important; }
+  .group-budget{ background:linear-gradient(135deg,#bbf7d0,#16a34a) !important; color:#065f46 !important; }
+  .group-academic{ background:linear-gradient(135deg,#c7d2fe,#6366f1) !important; color:#1e1b4b !important; }
+  .group-hr{ background:linear-gradient(135deg,#fecdd3,#f43f5e) !important; color:#881337 !important; }
   .modal{ position:fixed; inset:0; display:none; place-items:center; z-index:50; background:rgba(15,23,42,.35); backdrop-filter:blur(3px); }
   .modal.show{ display:grid; }
   .modal-card{ width:min(920px,92vw); background:#fff; border-radius:20px; padding:1.25rem; }
@@ -581,7 +589,13 @@ const EMOJI_GROUPS = {
   "✨ พิเศษ / เฉลิมฉลอง": ["🎉","🎊","🎈","🍰","🍭","🎂","🎇","🎆"]
 };
 const LOCATIONS = ["(ไม่มี)","หอประชุมศิลานุสรณ์","อาคารปาริชาติ","อาคารเฟื่องฟ้า","โรงฝึกงาน","สนามฟุตบอล","สนามวอลเลย์บอล","หน้าเสาธง","ห้องเคมี","ห้องชีววิทยา","ห้องเรียนรวม","ห้องสภานักเรียน","ห้องวิชาการ","ห้องงบประมาณ","ห้องบริหารทั่วไป","ห้องการงาน","ห้องวิทย์กายภาพ","ห้องภาษาไทย","ห้องภาษาอังกฤษ","ห้องพยาบาล","ห้องคณิตศาสตร์","ห้องคอมพิวเตอร์","ห้องสมุด"];
-const OWNERS = ["กลุ่มบริหารวิชาการ","กลุ่มบริหารงบประมาณ","กลุ่มบริหารทั่วไป","กลุ่มกลุ่มบริหารบุคคล","ฝ่ายกิจการนักเรียน","อื่นๆ"];
+const OWNERS = ["กลุ่มบริหารวิชาการ","กลุ่มบริหารงบประมาณ","กลุ่มบริหารทั่วไป","กลุ่มบริหารงานบุคคล","ฝ่ายกิจการนักเรียน","อื่นๆ"];
+const GROUP_TYPES = [
+  { key:'general',  label:'กลุ่มบริหารงานทั่วไป',    keywords:['บริหารงานทั่วไป','งานทั่วไป','ทั่วไป'] },
+  { key:'budget',   label:'กลุ่มบริหารงานงบประมาณ',  keywords:['บริหารงบ','งบประมาณ','งบ'] },
+  { key:'academic', label:'กลุ่มบริหารงานวิชาการ',    keywords:['บริหารวิชาการ','วิชาการ'] },
+  { key:'hr',       label:'กลุ่มบริหารงานบุคคล',      keywords:['บริหารบุคคล','งานบุคคล','บุคคล'] }
+];
 
 /* ===== วันหยุดนักขัตฤกษ์/พิเศษ ปี 2568 (ค.ศ. 2025) =====
    รูปแบบ YYYY-MM-DD (ค.ศ.) — ปรับแก้ได้ตามประกาศทางการ */
@@ -821,6 +835,26 @@ function rangeLabel(e){
   return '';
 }
 function escapeHtml(t){ return (t??'').toString().replace(/[&<>"]/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s])); }
+function resolveGroupByOwner(owner){
+  const text = (owner||'').toLowerCase();
+  return GROUP_TYPES.find(g => g.keywords.some(k => text.includes(k))) || null;
+}
+function renderGroupBadge(group){
+  if(!group) return '';
+  return `<span class="group-badge group-${group.key}">${group.label}</span>`;
+}
+function eventChip(e){
+  const group = resolveGroupByOwner(e.owner);
+  const badge = renderGroupBadge(group);
+  const groupCls = group ? `group-chip group-${group.key}` : '';
+  return `
+      <div class="chip ${groupCls}" title="${escapeHtml(e.title)}">
+        <span>${e.emoji || '🗓️'}</span>
+        <span>${escapeHtml(e.title)}</span>
+        <span class="opacity-70">• ${timeLabel(e)}</span>
+        ${badge}
+      </div>`;
+}
 
 function dayCell(d){
   const isSun = d.getDay()===0, isSat = d.getDay()===6;
@@ -856,12 +890,7 @@ function dayCell(d){
   // ชิปงาน (เดสก์ท็อป)
   const chipsDesktop = `
     ${chipHoliday}
-    ${evs.map(e=>`
-      <div class="chip" title="${escapeHtml(e.title)}">
-        <span>${e.emoji || '🗓️'}</span>
-        <span>${escapeHtml(e.title)}</span>
-        <span class="opacity-70">• ${timeLabel(e)}</span>
-      </div>`).join('')}
+    ${evs.map(eventChip).join('')}
   `;
 
   // มือถือ: จำนวนทั้งหมด = งาน + วันหยุด
@@ -894,11 +923,13 @@ function dayCell(d){
 
 function listItem(e){
   const dateStr = rangeLabel(e);
+  const group = resolveGroupByOwner(e.owner);
+  const badge = renderGroupBadge(group);
   return `<div class="p-3 card">
     <div class="flex items-center gap-2 text-sky-700"><span class="text-xl">${e.emoji||'🗓️'}</span><b>${escapeHtml(e.title)}</b></div>
     <div class="text-sm text-slate-600 mt-1">${dateStr}${e.startTime?` • ${e.startTime}`:''}${e.endTime?`–${e.endTime}`:''}</div>
     <div class="text-sm text-slate-600">${escapeHtml(e.location||'')}</div>
-    <div class="text-sm text-slate-500">${escapeHtml(e.owner||'')}</div>
+    <div class="text-sm text-slate-500 flex items-center gap-2">${badge}${escapeHtml(e.owner||'')}</div>
   </div>`;
 }
 
@@ -1020,9 +1051,12 @@ function openDetail(id){
   const e = STATE.events.find(x=>x.id===id); if(!e) return;
   $('#detailEmoji').text(e.emoji||'🗓️');
   $('#detailTitle').text(e.title);
+  const group = resolveGroupByOwner(e.owner);
+  const badge = renderGroupBadge(group);
   $('#detailBody').html(`
     <div>📅 ${rangeLabel(e)} ${timeLabel(e)!=='ทั้งวัน'?`• ${timeLabel(e)}`:''}</div>
     ${e.location?`<div>📍 ${escapeHtml(e.location)}</div>`:''}
+    ${group?`<div class="flex items-center gap-2 text-sm">${badge}</div>`:''}
     ${e.owner?`<div>👤 ${escapeHtml(e.owner)}</div>`:''}
     ${e.details?`<div class="text-slate-600 mt-2">${escapeHtml(e.details)}</div>`:''}
   `);
